@@ -19,23 +19,23 @@ type Config struct {
 	ContentUrl string
 }
 
-func initConfig(cfg Config) (*Config, error) {
-	h := strings.TrimSpace(cfg.Host)
+func (c *Config) initConfig() error {
+	h := strings.TrimSpace(c.Host)
 	u, err := url.Parse(h)
 	if len(h) == 0 || err != nil {
-		return nil, ErrInvalidHost
+		return ErrInvalidHost
 	}
-	cfg.Host = u.String()
+	c.Host = u.String()
 
-	if cfg.Version == "" {
-		cfg.Version = DefaultVersion
-	}
-
-	if cfg.Username == "" || cfg.Password == "" {
-		return nil, ErrInvalidUsernamePassword
+	if c.Version == "" {
+		c.Version = DefaultVersion
 	}
 
-	return &cfg, nil
+	if c.Username == "" || c.Password == "" {
+		return ErrInvalidUsernamePassword
+	}
+
+	return nil
 }
 
 func (c *Config) GetUrl(paths ...string) string {
