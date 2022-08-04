@@ -26,6 +26,12 @@ func (a *authentication) IsSignedIn() bool {
 	return true
 }
 
+// SignIn Signs you in as a user on the specified site on Tableau Server or Tableau Online.
+// This call returns a credentials token that you use in subsequent calls to the server.
+// Typically, a credentials token is valid for 120 minutes.
+//
+// URI:
+//   POST /api/api-version/auth/signin
 func (a *authentication) SignIn(force ...bool) error {
 	forceSignIn := len(force) > 0 && force[0]
 	if a.IsSignedIn() && !forceSignIn {
@@ -78,6 +84,6 @@ func (a *authentication) SignIn(force ...bool) error {
 	a.accessToken = resBody.Credentials.Token
 	a.userID = resBody.Credentials.User.ID
 	a.siteID = resBody.Credentials.Site.ID
-	
+
 	return nil
 }
