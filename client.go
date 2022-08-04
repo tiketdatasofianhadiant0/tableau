@@ -8,6 +8,7 @@ type Client struct {
 	c              *resty.Client
 	cfg            *Config
 	Authentication *authentication
+	UsersGroups    *usersGroups
 }
 
 func NewClient(cfg Config) (*Client, error) {
@@ -26,6 +27,9 @@ func NewClient(cfg Config) (*Client, error) {
 
 	auth := &authentication{base: client}
 	client.Authentication = auth
+
+	ug := &usersGroups{base: client}
+	client.UsersGroups = ug
 
 	return client, nil
 }
