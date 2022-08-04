@@ -48,7 +48,7 @@ func (a *authentication) SignIn(force ...bool) error {
 		},
 	}
 
-	url := a.base.cfg.GetUrl(authPath)
+	url := a.base.cfg.GetUrl(signInPath)
 	if url == "" {
 		return ErrInvalidHost
 	}
@@ -84,6 +84,50 @@ func (a *authentication) SignIn(force ...bool) error {
 	a.accessToken = resBody.Credentials.Token
 	a.userID = resBody.Credentials.User.ID
 	a.siteID = resBody.Credentials.Site.ID
+
+	return nil
+}
+
+// SignOut Signs you out of the current session.
+// This call invalidates the authentication token that is created by a call to Sign In.
+//
+// URI:
+//   POST /api/api-version/auth/signout
+func (a *authentication) SignOut() error {
+	if !a.IsSignedIn() {
+		return nil
+	}
+
+	url := a.base.cfg.GetUrl(signOutPath)
+	if url == "" {
+		return ErrInvalidHost
+	}
+
+	res, err := a.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJson).
+		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(authorizationHeader, a.accessToken).
+		Post(url)
+	if err != nil {
+		if errBody, err := models.NewErrorBody(res.Body()); err == nil {
+			return errBody.Error
+		}
+
+		return err
+	}
+
+	if res.StatusCode() != http.StatusNoContent {
+		if errBody, err := models.NewErrorBody(res.Body()); err == nil {
+			return errBody.Error
+		}
+
+		return ErrUnknownError
+	}
+
+	a.signInAt = nil
+	a.accessToken = ""
+	a.userID = ""
+	a.siteID = ""
 
 	return nil
 }
