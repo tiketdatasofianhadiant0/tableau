@@ -2,11 +2,6 @@ package tableau
 
 import (
 	"github.com/go-resty/resty/v2"
-	jsoniter "github.com/json-iterator/go"
-)
-
-var (
-	json = jsoniter.ConfigCompatibleWithStandardLibrary
 )
 
 type Client struct {

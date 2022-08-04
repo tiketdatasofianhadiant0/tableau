@@ -5,22 +5,6 @@ import (
 	"net/url"
 	"path"
 	"strings"
-	"time"
-)
-
-const (
-	DefaultVersion = "3.10"
-
-	retryCount       = 3
-	retryWaitTime    = 100 * time.Millisecond
-	retryMaxWaitTime = 2 * time.Second
-	tokenLifetime    = 120 * time.Minute
-
-	contentTypeHeader   = "Content-Type"
-	acceptHeader        = "Accept"
-	mimeTypeJson        = "application/json"
-	authorizationHeader = "Authorization"
-	bearerAuthorization = "Bearer %v"
 )
 
 type Config struct {
