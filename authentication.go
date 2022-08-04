@@ -68,19 +68,21 @@ func (a *authentication) SignIn(force ...bool) error {
 		SetBody(reqBody).
 		Post(url)
 	if err != nil {
-		if errBody, err := models.NewErrorBody(res.Body()); err == nil {
-			return errBody.Error
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return ErrUnknownError
 		}
 
-		return err
+		return errCodeMap[errBody.Error.Code]
 	}
 
 	if res.StatusCode() != http.StatusOK {
-		if errBody, err := models.NewErrorBody(res.Body()); err == nil {
-			return errBody.Error
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return ErrUnknownError
 		}
 
-		return ErrUnknownError
+		return errCodeMap[errBody.Error.Code]
 	}
 
 	resBody := models.SignInBody{}
@@ -118,19 +120,21 @@ func (a *authentication) SignOut() error {
 		SetHeader(authorizationHeader, a.getBearerToken()).
 		Post(url)
 	if err != nil {
-		if errBody, err := models.NewErrorBody(res.Body()); err == nil {
-			return errBody.Error
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return ErrUnknownError
 		}
 
-		return err
+		return errCodeMap[errBody.Error.Code]
 	}
 
 	if res.StatusCode() != http.StatusNoContent {
-		if errBody, err := models.NewErrorBody(res.Body()); err == nil {
-			return errBody.Error
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return ErrUnknownError
 		}
 
-		return ErrUnknownError
+		return errCodeMap[errBody.Error.Code]
 	}
 
 	a.signInAt = nil
@@ -179,19 +183,21 @@ func (a *authentication) SwitchSite(contentUrl string) error {
 		SetBody(reqBody).
 		Post(url)
 	if err != nil {
-		if errBody, err := models.NewErrorBody(res.Body()); err == nil {
-			return errBody.Error
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return ErrUnknownError
 		}
 
-		return err
+		return errCodeMap[errBody.Error.Code]
 	}
 
 	if res.StatusCode() != http.StatusOK {
-		if errBody, err := models.NewErrorBody(res.Body()); err == nil {
-			return errBody.Error
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return ErrUnknownError
 		}
 
-		return ErrUnknownError
+		return errCodeMap[errBody.Error.Code]
 	}
 
 	resBody := models.SignInBody{}
