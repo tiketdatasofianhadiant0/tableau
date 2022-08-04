@@ -5,6 +5,10 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
+var (
+	json = jsoniter.ConfigCompatibleWithStandardLibrary
+)
+
 type Client struct {
 	c              *resty.Client
 	cfg            *Config
@@ -16,7 +20,6 @@ func NewClient(cfg Config) (*Client, error) {
 		return nil, err
 	}
 
-	json := jsoniter.ConfigCompatibleWithStandardLibrary
 	restClient := resty.New()
 	restClient.JSONMarshal = json.Marshal
 	restClient.JSONUnmarshal = json.Unmarshal
