@@ -8,8 +8,9 @@ import (
 const (
 	DefaultVersion = "3.10"
 
-	signInPath  = `auth/signin`
-	signOutPath = `auth/signout`
+	signInPath     = `auth/signin`
+	signOutPath    = `auth/signout`
+	switchSitePath = `auth/switchSite`
 
 	retryCount       = 3
 	retryWaitTime    = 100 * time.Millisecond

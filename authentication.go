@@ -1,6 +1,7 @@
 package tableau
 
 import (
+	"fmt"
 	"github.com/tiketdatarisal/tableau/models"
 	"net/http"
 	"time"
@@ -12,6 +13,14 @@ type authentication struct {
 	accessToken string
 	userID      string
 	siteID      string
+}
+
+func (a *authentication) getBearerToken() string {
+	if a.accessToken == "" {
+		return ""
+	}
+
+	return fmt.Sprintf(bearerAuthorization, a.accessToken)
 }
 
 func (a *authentication) IsSignedIn() bool {
@@ -106,7 +115,7 @@ func (a *authentication) SignOut() error {
 	res, err := a.base.c.R().
 		SetHeader(contentTypeHeader, mimeTypeJson).
 		SetHeader(acceptHeader, mimeTypeJson).
-		SetHeader(authorizationHeader, a.accessToken).
+		SetHeader(authorizationHeader, a.getBearerToken()).
 		Post(url)
 	if err != nil {
 		if errBody, err := models.NewErrorBody(res.Body()); err == nil {
@@ -128,6 +137,73 @@ func (a *authentication) SignOut() error {
 	a.accessToken = ""
 	a.userID = ""
 	a.siteID = ""
+
+	return nil
+}
+
+// SwitchSite Switches you onto another site without having to provide a user name and password again.
+// This method allows an authenticated user to switch sites that they have access to.
+// Using the current authentication token, the method signs you in as a user on the site specified in the request payload.
+// The method returns a new authentication token and invalidates the old one.
+// You have the permissions of the user associated with the authorization token.
+// By default, the token is good for 120 minutes.
+//
+// URI:
+//   POST /api/api-version/auth/switchSite
+func (a *authentication) SwitchSite(contentUrl string) error {
+	if !a.IsSignedIn() {
+		if err := a.SignIn(); err != nil {
+			return err
+		}
+	}
+
+	if a.base.cfg.ContentUrl == contentUrl {
+		return nil
+	}
+
+	reqBody := models.SwitchSiteBody{
+		Site: &models.Site{
+			ContentUrl: contentUrl,
+		},
+	}
+
+	url := a.base.cfg.GetUrl(switchSitePath)
+	if url == "" {
+		return ErrInvalidHost
+	}
+
+	res, err := a.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJson).
+		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(authorizationHeader, a.getBearerToken()).
+		SetBody(reqBody).
+		Post(url)
+	if err != nil {
+		if errBody, err := models.NewErrorBody(res.Body()); err == nil {
+			return errBody.Error
+		}
+
+		return err
+	}
+
+	if res.StatusCode() != http.StatusOK {
+		if errBody, err := models.NewErrorBody(res.Body()); err == nil {
+			return errBody.Error
+		}
+
+		return ErrUnknownError
+	}
+
+	resBody := models.SignInBody{}
+	if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+		return ErrFailedUnmarshalResponseBody
+	}
+
+	ts := time.Now()
+	a.signInAt = &ts
+	a.accessToken = resBody.Credentials.Token
+	a.userID = resBody.Credentials.User.ID
+	a.siteID = resBody.Credentials.Site.ID
 
 	return nil
 }
