@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/tiketdatarisal/tableau/models"
 	"net/http"
+	. "net/url"
+	"strings"
 )
 
 type usersGroups struct {
@@ -151,7 +153,69 @@ func (u *usersGroups) DeleteGroup(groupID string) error {
 //   GET /api/api-version/sites/site-id/users/user-id/groups
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#get_groups_for_a_user
 func (u *usersGroups) GetGroupsForUser(userID string, groupNames ...string) ([]models.Group, error) {
-	return nil, nil
+	if !u.base.Authentication.IsSignedIn() {
+		if err := u.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	query := ""
+	if len(groupNames) >= 1 {
+		query = fmt.Sprintf(
+			"&filter=name:in:[%s]",
+			strings.Replace(
+				QueryEscape(strings.Join(groupNames, ",")),
+				"%2C",
+				",",
+				-1))
+	}
+
+	pageNum := 1
+	var result []models.Group
+	for {
+		url := u.base.cfg.GetUrl(fmt.Sprintf(getGroupsForUserPath, u.base.Authentication.siteID, userID))
+		if url == "" {
+			return nil, ErrInvalidHost
+		}
+
+		url = fmt.Sprintf(pagingParams, url, pageSize, pageNum, query)
+		res, err := u.base.c.R().
+			SetHeader(contentTypeHeader, mimeTypeJson).
+			SetHeader(acceptHeader, mimeTypeJson).
+			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
+			Get(url)
+		if err != nil {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		if res.StatusCode() != http.StatusOK {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		resBody := models.QueryGroupBody{}
+		if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+			return nil, ErrFailedUnmarshalResponseBody
+		}
+
+		result = append(result, resBody.Groups.Group...)
+		if pageNum*pageSize >= resBody.Pagination.GetTotalAvailable() {
+			break
+		}
+
+		pageNum++
+	}
+
+	return result, nil
 }
 
 // GetUsersInGroup Gets a list of users in the specified group.
@@ -159,7 +223,7 @@ func (u *usersGroups) GetGroupsForUser(userID string, groupNames ...string) ([]m
 // URI:
 //   GET /api/api-version/sites/site-id/groups/group-id/users
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#get_users_in_group
-func (u *usersGroups) GetUsersInGroup(groupID string) ([]models.User, error) {
+func (u *usersGroups) GetUsersInGroup(groupID string, userName ...string) ([]models.User, error) {
 	return nil, nil
 }
 

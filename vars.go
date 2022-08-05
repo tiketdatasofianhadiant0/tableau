@@ -8,11 +8,16 @@ import (
 const (
 	DefaultVersion = "3.10"
 
-	signInPath         = `auth/signin`
-	signOutPath        = `auth/signout`
-	switchSitePath     = `auth/switchSite`
-	addUserToGroupPath = `sites/%s/groups/%s/users`
-	addUserToSitePath  = `sites/%s/users`
+	pagingParams         = `%s?pageSize=%d&pageNumber=%d%s`
+	signInPath           = `auth/signin`
+	signOutPath          = `auth/signout`
+	switchSitePath       = `auth/switchSite`
+	addUserToGroupPath   = `sites/%s/groups/%s/users`
+	addUserToSitePath    = `sites/%s/users`
+	createGroupPath      = ``
+	deleteGroupPath      = ``
+	getGroupsForUserPath = `sites/%s/users/%s/groups`
+	getUsersInGroupPath  = ``
 
 	retryCount       = 3
 	retryWaitTime    = 100 * time.Millisecond
