@@ -9,6 +9,8 @@ var (
 	ErrFailedUnmarshalResponseBody = errors.New("failed to unmarshal response body")
 
 	ErrBadRequest             = errors.New("the content of the request body is missing or incomplete")
+	ErrInvalidPageNumber      = errors.New("invalid page number")
+	ErrInvalidPageSize        = errors.New("invalid page size")
 	ErrInvalidSiteRole        = errors.New("invalid site role")
 	ErrMalformedImportElement = errors.New("malformed import element")
 
@@ -19,6 +21,7 @@ var (
 
 	ErrForbidden                    = errors.New("user do not have sufficient permissions")
 	ErrActiveDirectoryNotConfigured = errors.New("active directory was not configured")
+	ErrPageSizeExceeded             = errors.New("the specified page size in larger than maximum page size")
 	ErrCannotSwitchToSameSite       = errors.New("cannot switch to the same site")
 
 	ErrSiteNotFound                 = errors.New("site was not found")
@@ -45,6 +48,8 @@ var (
 
 	errCodeMap = map[string]error{
 		"400000": ErrBadRequest,
+		"400006": ErrInvalidPageNumber,
+		"400007": ErrInvalidPageSize,
 		"400013": ErrInvalidSiteRole,
 		"400019": ErrMalformedImportElement,
 		"401000": ErrNoCredential,
@@ -53,6 +58,7 @@ var (
 		"401003": ErrSwitchSiteError,
 		"403004": ErrForbidden,
 		"403011": ErrActiveDirectoryNotConfigured,
+		"403014": ErrPageSizeExceeded,
 		"403070": ErrCannotSwitchToSameSite,
 		"404000": ErrSiteNotFound,
 		"404001": ErrVersionNotFound,

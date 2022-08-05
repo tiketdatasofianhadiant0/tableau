@@ -17,7 +17,7 @@ const (
 	createGroupPath      = ``
 	deleteGroupPath      = ``
 	getGroupsForUserPath = `sites/%s/users/%s/groups`
-	getUsersInGroupPath  = ``
+	getUsersInGroupPath  = `sites/%s/groups/%s/users`
 
 	retryCount       = 3
 	retryWaitTime    = 100 * time.Millisecond
