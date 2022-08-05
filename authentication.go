@@ -41,6 +41,7 @@ func (a *authentication) IsSignedIn() bool {
 //
 // URI:
 //   POST /api/api-version/auth/signin
+// Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_authentication.htm#sign_in
 func (a *authentication) SignIn(force ...bool) error {
 	forceSignIn := len(force) > 0 && force[0]
 	if a.IsSignedIn() && !forceSignIn {
@@ -104,6 +105,7 @@ func (a *authentication) SignIn(force ...bool) error {
 //
 // URI:
 //   POST /api/api-version/auth/signout
+// Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_authentication.htm#sign_out
 func (a *authentication) SignOut() error {
 	if !a.IsSignedIn() {
 		return nil
@@ -154,6 +156,7 @@ func (a *authentication) SignOut() error {
 //
 // URI:
 //   POST /api/api-version/auth/switchSite
+// Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_authentication.htm#switch_site
 func (a *authentication) SwitchSite(contentUrl string) error {
 	if !a.IsSignedIn() {
 		if err := a.SignIn(); err != nil {
@@ -210,6 +213,7 @@ func (a *authentication) SwitchSite(contentUrl string) error {
 	a.accessToken = resBody.Credentials.Token
 	a.userID = resBody.Credentials.User.ID
 	a.siteID = resBody.Credentials.Site.ID
+	a.base.cfg.ContentUrl = contentUrl
 
 	return nil
 }
