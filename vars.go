@@ -16,6 +16,7 @@ const (
 	retryWaitTime    = 100 * time.Millisecond
 	retryMaxWaitTime = 2 * time.Second
 	tokenLifetime    = 120 * time.Minute
+	pageSize         = 500
 
 	contentTypeHeader   = "Content-Type"
 	acceptHeader        = "Accept"
