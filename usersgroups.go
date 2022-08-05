@@ -1,6 +1,10 @@
 package tableau
 
-import "github.com/tiketdatarisal/tableau/models"
+import (
+	"fmt"
+	"github.com/tiketdatarisal/tableau/models"
+	"net/http"
+)
 
 type usersGroups struct {
 	base *Client
@@ -11,8 +15,54 @@ type usersGroups struct {
 // URI:
 //   POST /api/api-version/sites/site-id/groups/group-id/users
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#add_user_to_group
-func (u *usersGroups) AddUserToGroup(userID, groupID string) error {
-	return nil
+func (u *usersGroups) AddUserToGroup(userID, groupID string) (*models.User, error) {
+	if !u.base.Authentication.IsSignedIn() {
+		if err := u.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	reqBody := models.UserBody{
+		User: &models.User{
+			ID: userID,
+		},
+	}
+
+	url := u.base.cfg.GetUrl(fmt.Sprintf(addUserToGroupPath, u.base.Authentication.siteID, groupID))
+	if url == "" {
+		return nil, ErrInvalidHost
+	}
+
+	res, err := u.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJson).
+		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
+		SetBody(reqBody).
+		Post(url)
+	if err != nil {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	if res.StatusCode() != http.StatusOK {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	resBody := models.UserBody{}
+	if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+		return nil, ErrFailedUnmarshalResponseBody
+	}
+
+	return resBody.User, nil
 }
 
 // AddUserToSite Adds a user to Tableau Server or Tableau and assigns the user to the specified site.
@@ -25,7 +75,54 @@ func (u *usersGroups) AddUserToGroup(userID, groupID string) error {
 //   POST /api/api-version/sites/site-id/users
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#add_user_to_site
 func (u *usersGroups) AddUserToSite(user *models.User) (*models.User, error) {
-	return nil, nil
+	if !u.base.Authentication.IsSignedIn() {
+		if err := u.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	reqBody := models.UserBody{
+		User: &models.User{
+			Name:     user.Name,
+			SiteRole: user.SiteRole,
+		},
+	}
+
+	url := u.base.cfg.GetUrl(fmt.Sprintf(addUserToSitePath, u.base.Authentication.siteID))
+	if url == "" {
+		return nil, ErrInvalidHost
+	}
+
+	res, err := u.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJson).
+		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
+		SetBody(reqBody).
+		Post(url)
+	if err != nil {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	if res.StatusCode() != http.StatusOK {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	resBody := models.UserBody{}
+	if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+		return nil, ErrFailedUnmarshalResponseBody
+	}
+
+	return resBody.User, nil
 }
 
 // CreateGroup Creates a group.

@@ -30,6 +30,8 @@ var (
 
 	ErrInvalidRequestMethod = errors.New("not a valid request type")
 
+	ErrUserAlreadyOnSite      = errors.New("the specified user already exist on the site")
+	ErrGuestUserNotAllowed    = errors.New("adding user to a site with guest role was not allowed")
 	ErrGroupNameAlreadyExists = errors.New("group name already exists")
 	ErrUserAlreadyInGroup     = errors.New("the specified user already a member of the group")
 
@@ -59,6 +61,8 @@ var (
 		"404016": ErrDomainNotFound,
 		"404017": ErrActiveDirectoryGroupNotFound,
 		"405000": ErrInvalidRequestMethod,
+		"409000": ErrUserAlreadyOnSite,
+		"409005": ErrGuestUserNotAllowed,
 		"409009": ErrGroupNameAlreadyExists,
 		"409011": ErrUserAlreadyInGroup,
 		"413000": ErrPayloadToLarge,
