@@ -62,6 +62,7 @@ var (
 	ErrActiveDirectoryNotConfigured = errors.New("active directory was not configured")
 	ErrPageSizeExceeded             = errors.New("the specified page size in larger than maximum page size")
 	ErrCannotSwitchToSameSite       = errors.New("cannot switch to the same site")
+	ErrQueryUserForbidden           = errors.New("user does not have permission to query user information")
 
 	ErrSiteNotFound                 = errors.New("site was not found")
 	ErrVersionNotFound              = errors.New("invalid version were provided")
@@ -99,6 +100,7 @@ var (
 		"403011": ErrActiveDirectoryNotConfigured,
 		"403014": ErrPageSizeExceeded,
 		"403070": ErrCannotSwitchToSameSite,
+		"403133": ErrQueryUserForbidden,
 		"404000": ErrSiteNotFound,
 		"404001": ErrVersionNotFound,
 		"404002": ErrUserNotFound,
