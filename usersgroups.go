@@ -26,7 +26,7 @@ func (u *usersGroups) AddUserToGroup(userID, groupID string) (*models.User, erro
 
 	reqBody := models.UserBody{
 		User: &models.User{
-			ID: userID,
+			ID: &userID,
 		},
 	}
 
@@ -178,7 +178,7 @@ func (u *usersGroups) CreateGroup(group *models.Group) (*models.Group, error) {
 		return nil, errCodeMap[errBody.Error.Code]
 	}
 
-	if res.StatusCode() != http.StatusCreated || res.StatusCode() != http.StatusAccepted {
+	if res.StatusCode() != http.StatusCreated && res.StatusCode() != http.StatusAccepted {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
 			return nil, ErrUnknownError
@@ -656,7 +656,62 @@ func (u *usersGroups) RemoveUserFromGroup(userID, groupID string) error {
 //   PUT /api/api-version/sites/site-id/groups/group-id
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#update_group
 func (u *usersGroups) UpdateGroup(group *models.Group) (*models.Group, error) {
-	return nil, nil
+	if !u.base.Authentication.IsSignedIn() {
+		if err := u.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	if group == nil || group.ID == nil {
+		return nil, ErrBadRequest
+	}
+
+	reqBody := models.GroupBody{
+		Group: &models.Group{
+			Name:            group.Name,
+			MinimumSiteRole: group.MinimumSiteRole,
+		},
+	}
+
+	if group.Import != nil {
+		reqBody.Group.Import = group.Import
+	}
+
+	url := u.base.cfg.GetUrl(fmt.Sprintf(updateGroupPath, u.base.Authentication.siteID, *group.ID))
+	if url == "" {
+		return nil, ErrInvalidHost
+	}
+
+	res, err := u.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJson).
+		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
+		SetBody(reqBody).
+		Put(url)
+	if err != nil {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	if res.StatusCode() != http.StatusOK && res.StatusCode() != http.StatusAccepted {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	resBody := models.GroupBody{}
+	if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+		return nil, ErrFailedUnmarshalResponseBody
+	}
+
+	return resBody.Group, nil
 }
 
 // UpdateUser Modifies information about the specified user.
@@ -667,5 +722,59 @@ func (u *usersGroups) UpdateGroup(group *models.Group) (*models.Group, error) {
 //   PUT /api/api-version/sites/site-id/users/user-id
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#update_user
 func (u *usersGroups) UpdateUser(user *models.User) (*models.User, error) {
-	return nil, nil
+	if !u.base.Authentication.IsSignedIn() {
+		if err := u.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	if user == nil || user.ID == nil {
+		return nil, ErrBadRequest
+	}
+
+	reqBody := models.UserBody{
+		User: &models.User{
+			FullName:    user.FullName,
+			Email:       user.Email,
+			Password:    user.Password,
+			SiteRole:    user.SiteRole,
+			AuthSetting: user.AuthSetting,
+		},
+	}
+
+	url := u.base.cfg.GetUrl(fmt.Sprintf(updateUserPath, u.base.Authentication.siteID, *user.ID))
+	if url == "" {
+		return nil, ErrInvalidHost
+	}
+
+	res, err := u.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJson).
+		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
+		SetBody(reqBody).
+		Put(url)
+	if err != nil {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	if res.StatusCode() != http.StatusCreated {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	resBody := models.UserBody{}
+	if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+		return nil, ErrFailedUnmarshalResponseBody
+	}
+
+	return resBody.User, nil
 }

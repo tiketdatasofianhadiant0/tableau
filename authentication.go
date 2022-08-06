@@ -53,7 +53,7 @@ func (a *authentication) SignIn(force ...bool) error {
 			Name:     a.base.cfg.Username,
 			Password: a.base.cfg.Password,
 			Site: &models.Site{
-				ContentUrl: a.base.cfg.ContentUrl,
+				ContentUrl: &a.base.cfg.ContentUrl,
 			},
 		},
 	}
@@ -94,8 +94,8 @@ func (a *authentication) SignIn(force ...bool) error {
 	ts := time.Now()
 	a.signInAt = &ts
 	a.accessToken = resBody.Credentials.Token
-	a.userID = resBody.Credentials.User.ID
-	a.siteID = resBody.Credentials.Site.ID
+	a.userID = *resBody.Credentials.User.ID
+	a.siteID = *resBody.Credentials.Site.ID
 
 	return nil
 }
@@ -147,7 +147,7 @@ func (a *authentication) SignOut() error {
 	return nil
 }
 
-// SwitchSite Switches you onto another site without having to provide a user name and password again.
+// SwitchSite Switches you onto another site without having to provide a username and password again.
 // This method allows an authenticated user to switch sites that they have access to.
 // Using the current authentication token, the method signs you in as a user on the site specified in the request payload.
 // The method returns a new authentication token and invalidates the old one.
@@ -170,7 +170,7 @@ func (a *authentication) SwitchSite(contentUrl string) error {
 
 	reqBody := models.SwitchSiteBody{
 		Site: &models.Site{
-			ContentUrl: contentUrl,
+			ContentUrl: &contentUrl,
 		},
 	}
 
@@ -211,8 +211,8 @@ func (a *authentication) SwitchSite(contentUrl string) error {
 	ts := time.Now()
 	a.signInAt = &ts
 	a.accessToken = resBody.Credentials.Token
-	a.userID = resBody.Credentials.User.ID
-	a.siteID = resBody.Credentials.Site.ID
+	a.userID = *resBody.Credentials.User.ID
+	a.siteID = *resBody.Credentials.Site.ID
 	a.base.cfg.ContentUrl = contentUrl
 
 	return nil

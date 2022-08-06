@@ -62,6 +62,7 @@ var (
 	ErrForbidden                    = errors.New("user do not have sufficient permissions")
 	ErrActiveDirectoryNotConfigured = errors.New("active directory was not configured")
 	ErrPageSizeExceeded             = errors.New("the specified page size in larger than maximum page size")
+	ErrImportNameForbidden          = errors.New("imported name element different with referenced group-id")
 	ErrCannotSwitchToSameSite       = errors.New("cannot switch to the same site")
 	ErrQueryUserForbidden           = errors.New("user does not have permission to query user information")
 
@@ -104,6 +105,7 @@ var (
 		"403004": ErrForbidden,
 		"403011": ErrActiveDirectoryNotConfigured,
 		"403014": ErrPageSizeExceeded,
+		"403020": ErrImportNameForbidden,
 		"403070": ErrCannotSwitchToSameSite,
 		"403133": ErrQueryUserForbidden,
 
@@ -125,7 +127,7 @@ var (
 		"413000": ErrPayloadToLarge,
 
 		"429000": ErrTooManyRequest,
-		
+
 		"500000": ErrInternalServerError,
 		"500001": ErrInternalServiceError,
 		"500002": ErrBroadcastServiceError,
