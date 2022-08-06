@@ -565,6 +565,44 @@ func (u *usersGroups) QueryUserOnSite(userID string) (*models.User, error) {
 //   DELETE /api/api-version/sites/site-id/users/user-id
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#remove_user_from_site
 func (u *usersGroups) RemoveUserFromSite(userID string, newUserID ...string) error {
+	if !u.base.Authentication.IsSignedIn() {
+		if err := u.base.Authentication.SignIn(); err != nil {
+			return err
+		}
+	}
+
+	url := u.base.cfg.GetUrl(fmt.Sprintf(removeUserFromSitePath, u.base.Authentication.siteID, userID))
+	if url == "" {
+		return ErrInvalidHost
+	}
+
+	if len(newUserID) > 0 && newUserID[0] != "" {
+		url = fmt.Sprintf(mapAssetsParams, url, newUserID[0])
+	}
+
+	res, err := u.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJson).
+		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
+		Delete(url)
+	if err != nil {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return ErrUnknownError
+		}
+
+		return errCodeMap[errBody.Error.Code]
+	}
+
+	if res.StatusCode() != http.StatusNoContent {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return ErrUnknownError
+		}
+
+		return errCodeMap[errBody.Error.Code]
+	}
+
 	return nil
 }
 

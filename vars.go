@@ -74,6 +74,7 @@ var (
 	ErrInvalidRequestMethod = errors.New("not a valid request type")
 
 	ErrUserAlreadyOnSite      = errors.New("the specified user already exist on the site")
+	ErrUserAssetConflict      = errors.New("user still owns content and cannot be deleted")
 	ErrGuestUserNotAllowed    = errors.New("adding user to a site with guest role was not allowed")
 	ErrGroupNameAlreadyExists = errors.New("group name already exists")
 	ErrUserAlreadyInGroup     = errors.New("the specified user already a member of the group")
@@ -109,6 +110,7 @@ var (
 		"404017": ErrActiveDirectoryGroupNotFound,
 		"405000": ErrInvalidRequestMethod,
 		"409000": ErrUserAlreadyOnSite,
+		"409003": ErrUserAssetConflict,
 		"409005": ErrGuestUserNotAllowed,
 		"409009": ErrGroupNameAlreadyExists,
 		"409011": ErrUserAlreadyInGroup,
