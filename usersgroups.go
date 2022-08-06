@@ -83,6 +83,10 @@ func (u *usersGroups) AddUserToSite(user *models.User) (*models.User, error) {
 		}
 	}
 
+	if user == nil {
+		return nil, ErrBadRequest
+	}
+
 	reqBody := models.UserBody{
 		User: &models.User{
 			Name:     user.Name,
@@ -137,6 +141,10 @@ func (u *usersGroups) CreateGroup(group *models.Group) (*models.Group, error) {
 		if err := u.base.Authentication.SignIn(); err != nil {
 			return nil, err
 		}
+	}
+
+	if group == nil {
+		return nil, ErrBadRequest
 	}
 
 	reqBody := models.GroupBody{
