@@ -52,6 +52,7 @@ var (
 	ErrInvalidPageSize        = errors.New("invalid page size")
 	ErrInvalidSiteRole        = errors.New("invalid site role")
 	ErrMalformedImportElement = errors.New("malformed import element")
+	ErrDeleteFailed           = errors.New("delete failed")
 
 	ErrNoCredential      = errors.New("no credentials were provided")
 	ErrLoginError        = errors.New("the credentials are invalid (wrong username/password) or blocked")
@@ -93,29 +94,38 @@ var (
 		"400007": ErrInvalidPageSize,
 		"400013": ErrInvalidSiteRole,
 		"400019": ErrMalformedImportElement,
+		"400032": ErrDeleteFailed,
+
 		"401000": ErrNoCredential,
 		"401001": ErrLoginError,
 		"401002": ErrInvalidCredential,
 		"401003": ErrSwitchSiteError,
+
 		"403004": ErrForbidden,
 		"403011": ErrActiveDirectoryNotConfigured,
 		"403014": ErrPageSizeExceeded,
 		"403070": ErrCannotSwitchToSameSite,
 		"403133": ErrQueryUserForbidden,
+
 		"404000": ErrSiteNotFound,
 		"404001": ErrVersionNotFound,
 		"404002": ErrUserNotFound,
 		"404012": ErrGroupNotFound,
 		"404016": ErrDomainNotFound,
 		"404017": ErrActiveDirectoryGroupNotFound,
+
 		"405000": ErrInvalidRequestMethod,
+
 		"409000": ErrUserAlreadyOnSite,
 		"409003": ErrUserAssetConflict,
 		"409005": ErrGuestUserNotAllowed,
 		"409009": ErrGroupNameAlreadyExists,
 		"409011": ErrUserAlreadyInGroup,
+
 		"413000": ErrPayloadToLarge,
+
 		"429000": ErrTooManyRequest,
+		
 		"500000": ErrInternalServerError,
 		"500001": ErrInternalServiceError,
 		"500002": ErrBroadcastServiceError,
