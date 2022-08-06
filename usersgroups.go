@@ -110,7 +110,7 @@ func (u *usersGroups) AddUserToSite(user *models.User) (*models.User, error) {
 		return nil, errCodeMap[errBody.Error.Code]
 	}
 
-	if res.StatusCode() != http.StatusOK {
+	if res.StatusCode() != http.StatusCreated {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
 			return nil, ErrUnknownError
@@ -133,7 +133,58 @@ func (u *usersGroups) AddUserToSite(user *models.User) (*models.User, error) {
 //   POST /api/api-version/sites/site-id/groups
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#create_group
 func (u *usersGroups) CreateGroup(group *models.Group) (*models.Group, error) {
-	return nil, nil
+	if !u.base.Authentication.IsSignedIn() {
+		if err := u.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	reqBody := models.GroupBody{
+		Group: &models.Group{
+			Name:            group.Name,
+			MinimumSiteRole: group.MinimumSiteRole,
+		},
+	}
+
+	if group.Import != nil {
+		reqBody.Group.Import = group.Import
+	}
+
+	url := u.base.cfg.GetUrl(fmt.Sprintf(createGroupPath, u.base.Authentication.siteID))
+	if url == "" {
+		return nil, ErrInvalidHost
+	}
+
+	res, err := u.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJson).
+		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
+		SetBody(reqBody).
+		Post(url)
+	if err != nil {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	if res.StatusCode() != http.StatusCreated || res.StatusCode() != http.StatusAccepted {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	resBody := models.GroupBody{}
+	if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+		return nil, ErrFailedUnmarshalResponseBody
+	}
+
+	return resBody.Group, nil
 }
 
 // DeleteGroup Deletes the group on a specific site.
