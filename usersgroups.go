@@ -295,7 +295,7 @@ func (u *usersGroups) GetUsersOnSite(userNames ...string) ([]models.User, error)
 	pageNum := 1
 	var result []models.User
 	for {
-		url := u.base.cfg.GetUrl(fmt.Sprintf(getUsersOnSite, u.base.Authentication.siteID))
+		url := u.base.cfg.GetUrl(fmt.Sprintf(getUsersOnSitePath, u.base.Authentication.siteID))
 		if url == "" {
 			return nil, ErrInvalidHost
 		}
@@ -346,7 +346,69 @@ func (u *usersGroups) GetUsersOnSite(userNames ...string) ([]models.User, error)
 //   GET /api/api-version/sites/site-id/groups
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#query_groups
 func (u *usersGroups) QueryGroups(groupNames ...string) ([]models.Group, error) {
-	return nil, nil
+	if !u.base.Authentication.IsSignedIn() {
+		if err := u.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	query := ""
+	if len(groupNames) > 0 {
+		query = fmt.Sprintf(
+			filterByNameIn,
+			strings.Replace(
+				QueryEscape(strings.Join(groupNames, ",")),
+				"%2C",
+				",",
+				-1))
+	}
+
+	pageNum := 1
+	var result []models.Group
+	for {
+		url := u.base.cfg.GetUrl(fmt.Sprintf(queryGroupsPath, u.base.Authentication.siteID))
+		if url == "" {
+			return nil, ErrInvalidHost
+		}
+
+		url = fmt.Sprintf(pagingParams, url, pageSize, pageNum, query)
+		res, err := u.base.c.R().
+			SetHeader(contentTypeHeader, mimeTypeJson).
+			SetHeader(acceptHeader, mimeTypeJson).
+			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
+			Get(url)
+		if err != nil {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		if res.StatusCode() != http.StatusOK {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		resBody := models.QueryGroupBody{}
+		if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+			return nil, ErrFailedUnmarshalResponseBody
+		}
+
+		result = append(result, resBody.Groups.Group...)
+		if pageNum*pageSize >= resBody.Pagination.GetTotalAvailable() {
+			break
+		}
+
+		pageNum++
+	}
+
+	return result, nil
 }
 
 // QueryUserOnSite Returns information about the specified user.
