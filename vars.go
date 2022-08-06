@@ -8,6 +8,7 @@ import (
 const (
 	DefaultVersion = "3.10"
 
+	filterByNameIn       = `&filter=name:in:[%s]`
 	pagingParams         = `%s?pageSize=%d&pageNumber=%d%s`
 	signInPath           = `auth/signin`
 	signOutPath          = `auth/signout`
@@ -18,6 +19,7 @@ const (
 	deleteGroupPath      = ``
 	getGroupsForUserPath = `sites/%s/users/%s/groups`
 	getUsersInGroupPath  = `sites/%s/groups/%s/users`
+	getUsersOnSite       = `sites/%s/users`
 
 	retryCount       = 3
 	retryWaitTime    = 100 * time.Millisecond

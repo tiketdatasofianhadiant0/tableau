@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/tiketdatarisal/tableau/models"
 	"net/http"
+	. "net/url"
+	"strings"
 )
 
 type usersGroups struct {
@@ -273,7 +275,69 @@ func (u *usersGroups) GetUsersInGroup(groupID string) ([]models.User, error) {
 //   GET /api/api-version/sites/site-id/users
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#get_users_on_site
 func (u *usersGroups) GetUsersOnSite(userNames ...string) ([]models.User, error) {
-	return nil, nil
+	if !u.base.Authentication.IsSignedIn() {
+		if err := u.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	query := ""
+	if len(userNames) > 0 {
+		query = fmt.Sprintf(
+			filterByNameIn,
+			strings.Replace(
+				QueryEscape(strings.Join(userNames, ",")),
+				"%2C",
+				",",
+				-1))
+	}
+
+	pageNum := 1
+	var result []models.User
+	for {
+		url := u.base.cfg.GetUrl(fmt.Sprintf(getUsersOnSite, u.base.Authentication.siteID))
+		if url == "" {
+			return nil, ErrInvalidHost
+		}
+
+		url = fmt.Sprintf(pagingParams, url, pageSize, pageNum, query)
+		res, err := u.base.c.R().
+			SetHeader(contentTypeHeader, mimeTypeJson).
+			SetHeader(acceptHeader, mimeTypeJson).
+			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
+			Get(url)
+		if err != nil {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		if res.StatusCode() != http.StatusOK {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		resBody := models.QueryUserBody{}
+		if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+			return nil, ErrFailedUnmarshalResponseBody
+		}
+
+		result = append(result, resBody.Users.User...)
+		if pageNum*pageSize >= resBody.Pagination.GetTotalAvailable() {
+			break
+		}
+
+		pageNum++
+	}
+
+	return result, nil
 }
 
 // QueryGroups Returns a list of groups on the specified site, with optional parameters for specifying the paging of large results.
