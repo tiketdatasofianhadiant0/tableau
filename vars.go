@@ -12,6 +12,7 @@ const (
 	filterByNameIn            = `&filter=name:in:[%s]`
 	pagingParams              = `%s?pageSize=%d&pageNumber=%d%s`
 	mapAssetsParams           = `%s?mapAssetsTo=%s`
+	viewImageParams           = `%s?resolution=high&maxAge=%d`
 	signInPath                = `auth/signin`
 	signOutPath               = `auth/signout`
 	switchSitePath            = `auth/switchSite`
@@ -32,9 +33,11 @@ const (
 	addTagsToWorkbookPath     = `sites/%s/workbooks/%s/tags`
 	deleteTagFromViewPath     = `sites/%s/views/%s/tags/%s`
 	deleteTagFromWorkbookPath = `sites/%s/workbooks/%s/tags/%s`
+	queryViewImagePath        = `sites/%s/views/%s/image`
 
 	tokenLifetime = 120 * time.Minute
 	pageSize      = 500
+	defaultMaxAge = 60
 
 	contentTypeHeader   = `Content-Type`
 	acceptHeader        = `Accept`
