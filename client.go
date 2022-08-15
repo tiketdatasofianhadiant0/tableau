@@ -12,6 +12,7 @@ type Client struct {
 	WorkbooksViews *workbooksViews
 }
 
+// NewClient Initialize a new Tableau client.
 func NewClient(cfg Config) (*Client, error) {
 	if err := cfg.initConfig(); err != nil {
 		return nil, err
@@ -34,6 +35,6 @@ func NewClient(cfg Config) (*Client, error) {
 
 	wv := &workbooksViews{base: client}
 	client.WorkbooksViews = wv
-	
+
 	return client, nil
 }

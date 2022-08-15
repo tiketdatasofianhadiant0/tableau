@@ -28,6 +28,7 @@ const (
 	removeUserFromGroupPath = `sites/%s/groups/%s/users/%s`
 	updateGroupPath         = `sites/%s/groups/%s`
 	updateUserPath          = `sites/%s/users/%s`
+	addTagToViewPath        = `sites/%s/views/%s/tags`
 
 	tokenLifetime = 120 * time.Minute
 	pageSize      = 500
@@ -40,6 +41,9 @@ const (
 )
 
 var (
+	// NOTE: Used for unused function error
+	_ = NewClient
+
 	json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 	ErrInvalidHost                 = errors.New("not a valid host")
@@ -53,6 +57,7 @@ var (
 	ErrInvalidSiteRole        = errors.New("invalid site role")
 	ErrMalformedImportElement = errors.New("malformed import element")
 	ErrDeleteFailed           = errors.New("delete failed")
+	ErrAddTagFailed           = errors.New("add tag failed")
 
 	ErrNoCredential      = errors.New("no credentials were provided")
 	ErrLoginError        = errors.New("the credentials are invalid (wrong username/password) or blocked")
@@ -69,6 +74,8 @@ var (
 	ErrSiteNotFound                 = errors.New("site was not found")
 	ErrVersionNotFound              = errors.New("invalid version were provided")
 	ErrUserNotFound                 = errors.New("user was not found")
+	ErrWorkbookNotFound             = errors.New("workbook was not found")
+	ErrViewNotFound                 = errors.New("view was not found")
 	ErrGroupNotFound                = errors.New("group was not found")
 	ErrDomainNotFound               = errors.New("domain was not found")
 	ErrActiveDirectoryGroupNotFound = errors.New("active directory group was not found")
@@ -96,6 +103,7 @@ var (
 		"400013": ErrInvalidSiteRole,
 		"400019": ErrMalformedImportElement,
 		"400032": ErrDeleteFailed,
+		"400076": ErrAddTagFailed,
 
 		"401000": ErrNoCredential,
 		"401001": ErrLoginError,
@@ -112,6 +120,8 @@ var (
 		"404000": ErrSiteNotFound,
 		"404001": ErrVersionNotFound,
 		"404002": ErrUserNotFound,
+		"404009": ErrWorkbookNotFound,
+		"404011": ErrViewNotFound,
 		"404012": ErrGroupNotFound,
 		"404016": ErrDomainNotFound,
 		"404017": ErrActiveDirectoryGroupNotFound,
