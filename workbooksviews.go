@@ -46,8 +46,8 @@ func (w *workbooksViews) AddTagsToView(viewID string, tagNames []string) ([]mode
 	}
 
 	res, err := w.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 		SetBody(reqBody).
 		Put(url)
@@ -117,8 +117,8 @@ func (w *workbooksViews) AddTagsToWorkbook(workbookID string, tagNames []string)
 	}
 
 	res, err := w.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 		SetBody(reqBody).
 		Put(url)
@@ -171,8 +171,8 @@ func (w *workbooksViews) DeleteTagFromView(viewID, tagName string) error {
 	}
 
 	res, err := w.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 		Delete(url)
 	if err != nil {
@@ -214,8 +214,8 @@ func (w *workbooksViews) DeleteTagFromWorkbook(workbookID, tagName string) error
 	}
 
 	res, err := w.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 		Delete(url)
 	if err != nil {

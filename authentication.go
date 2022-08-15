@@ -64,8 +64,8 @@ func (a *authentication) SignIn(force ...bool) error {
 	}
 
 	res, err := a.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetBody(reqBody).
 		Post(url)
 	if err != nil {
@@ -117,8 +117,8 @@ func (a *authentication) SignOut() error {
 	}
 
 	res, err := a.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, a.getBearerToken()).
 		Post(url)
 	if err != nil {
@@ -180,8 +180,8 @@ func (a *authentication) SwitchSite(contentUrl string) error {
 	}
 
 	res, err := a.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, a.getBearerToken()).
 		SetBody(reqBody).
 		Post(url)

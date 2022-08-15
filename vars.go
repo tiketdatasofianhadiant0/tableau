@@ -36,11 +36,14 @@ const (
 	tokenLifetime = 120 * time.Minute
 	pageSize      = 500
 
-	contentTypeHeader   = "Content-Type"
-	acceptHeader        = "Accept"
-	mimeTypeJson        = "application/json"
-	authorizationHeader = "Authorization"
-	bearerAuthorization = "Bearer %v"
+	contentTypeHeader   = `Content-Type`
+	acceptHeader        = `Accept`
+	mimeTypeJSON        = `application/json`
+	mimeTypeAny         = `*/*`
+	mimeTypePNG         = `image/png`
+	mimeTypePDF         = `application/pdf`
+	authorizationHeader = `Authorization`
+	bearerAuthorization = `Bearer %v`
 )
 
 var (

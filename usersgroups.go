@@ -36,8 +36,8 @@ func (u *usersGroups) AddUserToGroup(userID, groupID string) (*models.User, erro
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		SetBody(reqBody).
 		Post(url)
@@ -100,8 +100,8 @@ func (u *usersGroups) AddUserToSite(user *models.User) (*models.User, error) {
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		SetBody(reqBody).
 		Post(url)
@@ -164,8 +164,8 @@ func (u *usersGroups) CreateGroup(group *models.Group) (*models.Group, error) {
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		SetBody(reqBody).
 		Post(url)
@@ -215,8 +215,8 @@ func (u *usersGroups) DeleteGroup(groupID string) error {
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		Delete(url)
 	if err != nil {
@@ -263,8 +263,8 @@ func (u *usersGroups) GetGroupsForUser(userID string) ([]models.Group, error) {
 
 		url = fmt.Sprintf(pagingParams, url, pageSize, pageNum, query)
 		res, err := u.base.c.R().
-			SetHeader(contentTypeHeader, mimeTypeJson).
-			SetHeader(acceptHeader, mimeTypeJson).
+			SetHeader(contentTypeHeader, mimeTypeJSON).
+			SetHeader(acceptHeader, mimeTypeJSON).
 			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 			Get(url)
 		if err != nil {
@@ -324,8 +324,8 @@ func (u *usersGroups) GetUsersInGroup(groupID string) ([]models.User, error) {
 
 		url = fmt.Sprintf(pagingParams, url, pageSize, pageNum, query)
 		res, err := u.base.c.R().
-			SetHeader(contentTypeHeader, mimeTypeJson).
-			SetHeader(acceptHeader, mimeTypeJson).
+			SetHeader(contentTypeHeader, mimeTypeJSON).
+			SetHeader(acceptHeader, mimeTypeJSON).
 			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 			Get(url)
 		if err != nil {
@@ -395,8 +395,8 @@ func (u *usersGroups) GetUsersOnSite(userNames ...string) ([]models.User, error)
 
 		url = fmt.Sprintf(pagingParams, url, pageSize, pageNum, query)
 		res, err := u.base.c.R().
-			SetHeader(contentTypeHeader, mimeTypeJson).
-			SetHeader(acceptHeader, mimeTypeJson).
+			SetHeader(contentTypeHeader, mimeTypeJSON).
+			SetHeader(acceptHeader, mimeTypeJSON).
 			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 			Get(url)
 		if err != nil {
@@ -466,8 +466,8 @@ func (u *usersGroups) QueryGroups(groupNames ...string) ([]models.Group, error) 
 
 		url = fmt.Sprintf(pagingParams, url, pageSize, pageNum, query)
 		res, err := u.base.c.R().
-			SetHeader(contentTypeHeader, mimeTypeJson).
-			SetHeader(acceptHeader, mimeTypeJson).
+			SetHeader(contentTypeHeader, mimeTypeJSON).
+			SetHeader(acceptHeader, mimeTypeJSON).
 			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 			Get(url)
 		if err != nil {
@@ -522,8 +522,8 @@ func (u *usersGroups) QueryUserOnSite(userID string) (*models.User, error) {
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		Get(url)
 	if err != nil {
@@ -581,8 +581,8 @@ func (u *usersGroups) RemoveUserFromSite(userID string, newUserID ...string) err
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		Delete(url)
 	if err != nil {
@@ -624,8 +624,8 @@ func (u *usersGroups) RemoveUserFromGroup(userID, groupID string) error {
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		Delete(url)
 	if err != nil {
@@ -683,8 +683,8 @@ func (u *usersGroups) UpdateGroup(group *models.Group) (*models.Group, error) {
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		SetBody(reqBody).
 		Put(url)
@@ -748,8 +748,8 @@ func (u *usersGroups) UpdateUser(user *models.User) (*models.User, error) {
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		SetBody(reqBody).
 		Put(url)
