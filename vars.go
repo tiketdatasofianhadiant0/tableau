@@ -35,6 +35,7 @@ const (
 	deleteTagFromViewPath     = `sites/%s/views/%s/tags/%s`
 	deleteTagFromWorkbookPath = `sites/%s/workbooks/%s/tags/%s`
 	downloadWorkbookPDFPath   = `sites/%s/workbooks/%s/pdf`
+	getViewPath               = `sites/%s/views/%s`
 	queryViewImagePath        = `sites/%s/views/%s/image`
 
 	tokenLifetime = 120 * time.Minute

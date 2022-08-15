@@ -304,7 +304,49 @@ func (w *workbooksViews) DownloadWorkbookPDF(workbookID string, maxAgeInMinutes 
 // URI:
 //   GET /api/api-version/sites/site-id/views/view-id
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#get_view
-func (w *workbooksViews) GetView() {}
+func (w *workbooksViews) GetView(viewID string) (*models.View, error) {
+	if !w.base.Authentication.IsSignedIn() {
+		if err := w.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	url := w.base.cfg.GetUrl(fmt.Sprintf(getViewPath, w.base.Authentication.siteID, viewID))
+	if url == "" {
+		return nil, ErrInvalidHost
+	}
+
+	res, err := w.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
+		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
+		Get(url)
+
+	if err != nil {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	if res.StatusCode() != http.StatusOK {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	resBody := models.ViewBody{}
+	if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+		return nil, ErrFailedUnmarshalResponseBody
+	}
+
+	return resBody.View, nil
+}
 
 // GetViewByPath Gets the details of all views in a site with a specified name.
 //
