@@ -12,6 +12,7 @@ const (
 	filterByNameIn            = `&filter=name:in:[%s]`
 	pagingParams              = `%s?pageSize=%d&pageNumber=%d%s`
 	mapAssetsParams           = `%s?mapAssetsTo=%s`
+	downloadPDFParams         = `%s?type=A4&orientation=Portrait&maxAge=%d`
 	viewImageParams           = `%s?resolution=high&maxAge=%d`
 	signInPath                = `auth/signin`
 	signOutPath               = `auth/signout`
@@ -33,6 +34,7 @@ const (
 	addTagsToWorkbookPath     = `sites/%s/workbooks/%s/tags`
 	deleteTagFromViewPath     = `sites/%s/views/%s/tags/%s`
 	deleteTagFromWorkbookPath = `sites/%s/workbooks/%s/tags/%s`
+	downloadWorkbookPDFPath   = `sites/%s/workbooks/%s/pdf`
 	queryViewImagePath        = `sites/%s/views/%s/image`
 
 	tokenLifetime = 120 * time.Minute
@@ -55,8 +57,8 @@ var (
 
 	ErrInvalidHost                 = errors.New("not a valid host")
 	ErrInvalidUsernamePassword     = errors.New("not a valid username or password")
-	ErrUnknownError                = errors.New("unknown error")
 	ErrFailedUnmarshalResponseBody = errors.New("failed to unmarshal response body")
+	ErrUnknownError                = errors.New("unknown error")
 
 	ErrBadRequest             = errors.New("the content of the request body is missing or incomplete")
 	ErrInvalidPageNumber      = errors.New("invalid page number")
@@ -68,6 +70,7 @@ var (
 	ErrDeleteTagFromWorkbook  = errors.New("delete tag from workbook failed")
 	ErrAddTagsView            = errors.New("add tags to view failed")
 	ErrDeleteTagFromView      = errors.New("delete tag from view failed")
+	ErrDownloadWorkbookPDF    = errors.New("failed to download workbook as PDF")
 
 	ErrNoCredential      = errors.New("no credentials were provided")
 	ErrLoginError        = errors.New("the credentials are invalid (wrong username/password) or blocked")
@@ -79,6 +82,7 @@ var (
 	ErrPageSizeExceeded             = errors.New("the specified page size in larger than maximum page size")
 	ErrImportNameForbidden          = errors.New("imported name element different with referenced group-id")
 	ErrCannotSwitchToSameSite       = errors.New("cannot switch to the same site")
+	ErrDownloadPDFDisabled          = errors.New("download PDF was disabled")
 	ErrQueryUserForbidden           = errors.New("user does not have permission to query user information")
 
 	ErrSiteNotFound                 = errors.New("site was not found")
@@ -119,6 +123,7 @@ var (
 		"400051": ErrDeleteTagFromWorkbook,
 		"400076": ErrAddTagsView,
 		"400078": ErrDeleteTagFromView,
+		"400101": ErrDownloadWorkbookPDF,
 
 		"401000": ErrNoCredential,
 		"401001": ErrLoginError,
@@ -130,6 +135,7 @@ var (
 		"403014": ErrPageSizeExceeded,
 		"403020": ErrImportNameForbidden,
 		"403070": ErrCannotSwitchToSameSite,
+		"403105": ErrDownloadPDFDisabled,
 		"403133": ErrQueryUserForbidden,
 
 		"404000": ErrSiteNotFound,

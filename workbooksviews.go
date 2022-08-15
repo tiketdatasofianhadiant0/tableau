@@ -250,7 +250,54 @@ func (w *workbooksViews) DeleteTagFromWorkbook(workbookID, tagName string) error
 // URI:
 //   GET /api/api-version/sites/site-id/workbooks/workbook-id/pdf?type=page-type&orientation=page-orientation
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#download_workbook_pdf
-func (w *workbooksViews) DownloadWorkbookPDF() {}
+func (w *workbooksViews) DownloadWorkbookPDF(workbookID string, maxAgeInMinutes ...int) ([]byte, error) {
+	if !w.base.Authentication.IsSignedIn() {
+		if err := w.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	maxAge := defaultMaxAge
+	if len(maxAgeInMinutes) > 0 {
+		maxAge = 1
+		if maxAgeInMinutes[0] > 1 {
+			maxAge = maxAgeInMinutes[0]
+		}
+	}
+
+	url := w.base.cfg.GetUrl(fmt.Sprintf(downloadWorkbookPDFPath, w.base.Authentication.siteID, workbookID))
+	if url == "" {
+		return nil, ErrInvalidHost
+	}
+
+	url = fmt.Sprintf(downloadPDFParams, url, maxAge)
+
+	res, err := w.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeAny).
+		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
+		Get(url)
+
+	if err != nil {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	if res.StatusCode() != http.StatusOK {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	return res.Body(), nil
+}
 
 // GetView Gets the details of a specific view.
 //
