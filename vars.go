@@ -28,7 +28,8 @@ const (
 	removeUserFromGroupPath = `sites/%s/groups/%s/users/%s`
 	updateGroupPath         = `sites/%s/groups/%s`
 	updateUserPath          = `sites/%s/users/%s`
-	addTagToViewPath        = `sites/%s/views/%s/tags`
+	addTagsToViewPath       = `sites/%s/views/%s/tags`
+	addTagsToWorkbookPath   = `sites/%s/workbooks/%s/tags`
 
 	tokenLifetime = 120 * time.Minute
 	pageSize      = 500
@@ -57,7 +58,8 @@ var (
 	ErrInvalidSiteRole        = errors.New("invalid site role")
 	ErrMalformedImportElement = errors.New("malformed import element")
 	ErrDeleteFailed           = errors.New("delete failed")
-	ErrAddTagFailed           = errors.New("add tag failed")
+	ErrAddTagsWorkbookFailed  = errors.New("add tags to workbook failed")
+	ErrAddTagsViewFailed      = errors.New("add tags to view failed")
 
 	ErrNoCredential      = errors.New("no credentials were provided")
 	ErrLoginError        = errors.New("the credentials are invalid (wrong username/password) or blocked")
@@ -103,7 +105,8 @@ var (
 		"400013": ErrInvalidSiteRole,
 		"400019": ErrMalformedImportElement,
 		"400032": ErrDeleteFailed,
-		"400076": ErrAddTagFailed,
+		"400049": ErrAddTagsWorkbookFailed,
+		"400076": ErrAddTagsViewFailed,
 
 		"401000": ErrNoCredential,
 		"401001": ErrLoginError,

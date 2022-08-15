@@ -39,7 +39,7 @@ func (w *workbooksViews) AddTagsToView(viewID string, tagNames []string) ([]mode
 		})(&struct{ Tag []models.Tag }{Tag: tags}),
 	}
 
-	url := w.base.cfg.GetUrl(fmt.Sprintf(addTagToViewPath, w.base.Authentication.siteID, viewID))
+	url := w.base.cfg.GetUrl(fmt.Sprintf(addTagsToViewPath, w.base.Authentication.siteID, viewID))
 	if url == "" {
 		return nil, ErrInvalidHost
 	}
@@ -86,7 +86,71 @@ func (w *workbooksViews) AddTagsToView(viewID string, tagNames []string) ([]mode
 // URI:
 //   PUT /api/api-version/sites/site-id/workbooks/workbook-id/tags
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#add_tags_to_workbook
-func (w *workbooksViews) AddTagsToWorkbook() {}
+func (w *workbooksViews) AddTagsToWorkbook(workbookID string, tagNames []string) ([]models.Tag, error) {
+	if !w.base.Authentication.IsSignedIn() {
+		if err := w.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	var tags []models.Tag
+	for _, tagName := range tagNames {
+		if tagName != "" {
+			tags = append(tags, models.Tag{Label: tagName})
+		}
+	}
+
+	if len(tags) == 0 {
+		return nil, ErrBadRequest
+	}
+
+	reqBody := models.TagBody{
+		Tags: (*struct {
+			Tag []models.Tag `json:"tag,omitempty"`
+		})(&struct{ Tag []models.Tag }{Tag: tags}),
+	}
+
+	url := w.base.cfg.GetUrl(fmt.Sprintf(addTagsToWorkbookPath, w.base.Authentication.siteID, workbookID))
+	if url == "" {
+		return nil, ErrInvalidHost
+	}
+
+	res, err := w.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJson).
+		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
+		SetBody(reqBody).
+		Put(url)
+
+	if err != nil {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	if res.StatusCode() != http.StatusOK {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	resBody := models.TagBody{}
+	if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+		return nil, ErrFailedUnmarshalResponseBody
+	}
+
+	if resBody.Tags == nil {
+		return nil, nil
+	}
+
+	return resBody.Tags.Tag, nil
+}
 
 // DeleteTagsToView Deletes a tag from the specified view.
 //
