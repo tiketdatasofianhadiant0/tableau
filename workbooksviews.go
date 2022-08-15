@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/tiketdatarisal/tableau/models"
 	"net/http"
+	. "net/url"
 )
 
 type workbooksViews struct {
@@ -164,7 +165,7 @@ func (w *workbooksViews) DeleteTagFromView(viewID, tagName string) error {
 		}
 	}
 
-	url := w.base.cfg.GetUrl(fmt.Sprintf(deleteTagFromViewPath, w.base.Authentication.siteID, viewID, tagName))
+	url := w.base.cfg.GetUrl(fmt.Sprintf(deleteTagFromViewPath, w.base.Authentication.siteID, viewID, QueryEscape(tagName)))
 	if url == "" {
 		return ErrInvalidHost
 	}
@@ -195,12 +196,48 @@ func (w *workbooksViews) DeleteTagFromView(viewID, tagName string) error {
 	return nil
 }
 
-// DeleteTagsToWorkbook Deletes a tag from the specified workbook.
+// DeleteTagFromWorkbook Deletes a tag from the specified workbook.
 //
 // URI:
 //   DELETE /api/api-version/sites/site-id/workbooks/workbook-id/tags/tag-name
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#delete_tag_from_workbook
-func (w *workbooksViews) DeleteTagsToWorkbook() {}
+func (w *workbooksViews) DeleteTagFromWorkbook(workbookID, tagName string) error {
+	if !w.base.Authentication.IsSignedIn() {
+		if err := w.base.Authentication.SignIn(); err != nil {
+			return err
+		}
+	}
+
+	url := w.base.cfg.GetUrl(fmt.Sprintf(deleteTagFromWorkbookPath, w.base.Authentication.siteID, workbookID, QueryEscape(tagName)))
+	if url == "" {
+		return ErrInvalidHost
+	}
+
+	res, err := w.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJson).
+		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
+		Delete(url)
+	if err != nil {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return ErrUnknownError
+		}
+
+		return errCodeMap[errBody.Error.Code]
+	}
+
+	if res.StatusCode() != http.StatusNoContent {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return ErrUnknownError
+		}
+
+		return errCodeMap[errBody.Error.Code]
+	}
+
+	return nil
+}
 
 // DownloadWorkbookPDF Downloads a .pdf containing images of the sheets that the user has permission to view in a workbook.
 // Download Images/PDF permissions must be enabled for the workbook (true by default).

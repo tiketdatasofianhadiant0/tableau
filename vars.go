@@ -9,28 +9,29 @@ import (
 const (
 	DefaultVersion = "3.10"
 
-	filterByNameIn          = `&filter=name:in:[%s]`
-	pagingParams            = `%s?pageSize=%d&pageNumber=%d%s`
-	mapAssetsParams         = `%s?mapAssetsTo=%s`
-	signInPath              = `auth/signin`
-	signOutPath             = `auth/signout`
-	switchSitePath          = `auth/switchSite`
-	addUserToGroupPath      = `sites/%s/groups/%s/users`
-	addUserToSitePath       = `sites/%s/users`
-	createGroupPath         = `sites/%s/groups`
-	deleteGroupPath         = `sites/%s/groups/%s`
-	getGroupsForUserPath    = `sites/%s/users/%s/groups`
-	getUsersInGroupPath     = `sites/%s/groups/%s/users`
-	getUsersOnSitePath      = `sites/%s/users`
-	queryGroupsPath         = `sites/%s/groups`
-	queryUserOnSitePath     = `sites/%s/users/%s`
-	removeUserFromSitePath  = `sites/%s/users/%s`
-	removeUserFromGroupPath = `sites/%s/groups/%s/users/%s`
-	updateGroupPath         = `sites/%s/groups/%s`
-	updateUserPath          = `sites/%s/users/%s`
-	addTagsToViewPath       = `sites/%s/views/%s/tags`
-	addTagsToWorkbookPath   = `sites/%s/workbooks/%s/tags`
-	deleteTagFromViewPath   = `sites/%s/views/%s/tags/%s`
+	filterByNameIn            = `&filter=name:in:[%s]`
+	pagingParams              = `%s?pageSize=%d&pageNumber=%d%s`
+	mapAssetsParams           = `%s?mapAssetsTo=%s`
+	signInPath                = `auth/signin`
+	signOutPath               = `auth/signout`
+	switchSitePath            = `auth/switchSite`
+	addUserToGroupPath        = `sites/%s/groups/%s/users`
+	addUserToSitePath         = `sites/%s/users`
+	createGroupPath           = `sites/%s/groups`
+	deleteGroupPath           = `sites/%s/groups/%s`
+	getGroupsForUserPath      = `sites/%s/users/%s/groups`
+	getUsersInGroupPath       = `sites/%s/groups/%s/users`
+	getUsersOnSitePath        = `sites/%s/users`
+	queryGroupsPath           = `sites/%s/groups`
+	queryUserOnSitePath       = `sites/%s/users/%s`
+	removeUserFromSitePath    = `sites/%s/users/%s`
+	removeUserFromGroupPath   = `sites/%s/groups/%s/users/%s`
+	updateGroupPath           = `sites/%s/groups/%s`
+	updateUserPath            = `sites/%s/users/%s`
+	addTagsToViewPath         = `sites/%s/views/%s/tags`
+	addTagsToWorkbookPath     = `sites/%s/workbooks/%s/tags`
+	deleteTagFromViewPath     = `sites/%s/views/%s/tags/%s`
+	deleteTagFromWorkbookPath = `sites/%s/workbooks/%s/tags/%s`
 
 	tokenLifetime = 120 * time.Minute
 	pageSize      = 500
@@ -53,15 +54,16 @@ var (
 	ErrUnknownError                = errors.New("unknown error")
 	ErrFailedUnmarshalResponseBody = errors.New("failed to unmarshal response body")
 
-	ErrBadRequest              = errors.New("the content of the request body is missing or incomplete")
-	ErrInvalidPageNumber       = errors.New("invalid page number")
-	ErrInvalidPageSize         = errors.New("invalid page size")
-	ErrInvalidSiteRole         = errors.New("invalid site role")
-	ErrMalformedImportElement  = errors.New("malformed import element")
-	ErrDeleteFailed            = errors.New("delete failed")
-	ErrAddTagsWorkbookFailed   = errors.New("add tags to workbook failed")
-	ErrAddTagsViewFailed       = errors.New("add tags to view failed")
-	ErrDeleteTagFromViewFailed = errors.New("delete tags from view failed")
+	ErrBadRequest             = errors.New("the content of the request body is missing or incomplete")
+	ErrInvalidPageNumber      = errors.New("invalid page number")
+	ErrInvalidPageSize        = errors.New("invalid page size")
+	ErrInvalidSiteRole        = errors.New("invalid site role")
+	ErrMalformedImportElement = errors.New("malformed import element")
+	ErrDeleteFailed           = errors.New("delete failed")
+	ErrAddTagsWorkbook        = errors.New("add tags to workbook failed")
+	ErrDeleteTagFromWorkbook  = errors.New("delete tag from workbook failed")
+	ErrAddTagsView            = errors.New("add tags to view failed")
+	ErrDeleteTagFromView      = errors.New("delete tag from view failed")
 
 	ErrNoCredential      = errors.New("no credentials were provided")
 	ErrLoginError        = errors.New("the credentials are invalid (wrong username/password) or blocked")
@@ -109,9 +111,10 @@ var (
 		"400013": ErrInvalidSiteRole,
 		"400019": ErrMalformedImportElement,
 		"400032": ErrDeleteFailed,
-		"400049": ErrAddTagsWorkbookFailed,
-		"400076": ErrAddTagsViewFailed,
-		"400078": ErrDeleteTagFromViewFailed,
+		"400049": ErrAddTagsWorkbook,
+		"400051": ErrDeleteTagFromWorkbook,
+		"400076": ErrAddTagsView,
+		"400078": ErrDeleteTagFromView,
 
 		"401000": ErrNoCredential,
 		"401001": ErrLoginError,
