@@ -152,12 +152,48 @@ func (w *workbooksViews) AddTagsToWorkbook(workbookID string, tagNames []string)
 	return resBody.Tags.Tag, nil
 }
 
-// DeleteTagsToView Deletes a tag from the specified view.
+// DeleteTagFromView Deletes a tag from the specified view.
 //
 // URI:
 //   DELETE /api/api-version/sites/site-id/views/view-id/tags/tag-name
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#delete_tag_from_view
-func (w *workbooksViews) DeleteTagsToView() {}
+func (w *workbooksViews) DeleteTagFromView(viewID, tagName string) error {
+	if !w.base.Authentication.IsSignedIn() {
+		if err := w.base.Authentication.SignIn(); err != nil {
+			return err
+		}
+	}
+
+	url := w.base.cfg.GetUrl(fmt.Sprintf(deleteTagFromViewPath, w.base.Authentication.siteID, viewID, tagName))
+	if url == "" {
+		return ErrInvalidHost
+	}
+
+	res, err := w.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJson).
+		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
+		Delete(url)
+	if err != nil {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return ErrUnknownError
+		}
+
+		return errCodeMap[errBody.Error.Code]
+	}
+
+	if res.StatusCode() != http.StatusNoContent {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return ErrUnknownError
+		}
+
+		return errCodeMap[errBody.Error.Code]
+	}
+
+	return nil
+}
 
 // DeleteTagsToWorkbook Deletes a tag from the specified workbook.
 //

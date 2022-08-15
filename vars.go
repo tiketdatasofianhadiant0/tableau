@@ -30,6 +30,7 @@ const (
 	updateUserPath          = `sites/%s/users/%s`
 	addTagsToViewPath       = `sites/%s/views/%s/tags`
 	addTagsToWorkbookPath   = `sites/%s/workbooks/%s/tags`
+	deleteTagFromViewPath   = `sites/%s/views/%s/tags/%s`
 
 	tokenLifetime = 120 * time.Minute
 	pageSize      = 500
@@ -52,14 +53,15 @@ var (
 	ErrUnknownError                = errors.New("unknown error")
 	ErrFailedUnmarshalResponseBody = errors.New("failed to unmarshal response body")
 
-	ErrBadRequest             = errors.New("the content of the request body is missing or incomplete")
-	ErrInvalidPageNumber      = errors.New("invalid page number")
-	ErrInvalidPageSize        = errors.New("invalid page size")
-	ErrInvalidSiteRole        = errors.New("invalid site role")
-	ErrMalformedImportElement = errors.New("malformed import element")
-	ErrDeleteFailed           = errors.New("delete failed")
-	ErrAddTagsWorkbookFailed  = errors.New("add tags to workbook failed")
-	ErrAddTagsViewFailed      = errors.New("add tags to view failed")
+	ErrBadRequest              = errors.New("the content of the request body is missing or incomplete")
+	ErrInvalidPageNumber       = errors.New("invalid page number")
+	ErrInvalidPageSize         = errors.New("invalid page size")
+	ErrInvalidSiteRole         = errors.New("invalid site role")
+	ErrMalformedImportElement  = errors.New("malformed import element")
+	ErrDeleteFailed            = errors.New("delete failed")
+	ErrAddTagsWorkbookFailed   = errors.New("add tags to workbook failed")
+	ErrAddTagsViewFailed       = errors.New("add tags to view failed")
+	ErrDeleteTagFromViewFailed = errors.New("delete tags from view failed")
 
 	ErrNoCredential      = errors.New("no credentials were provided")
 	ErrLoginError        = errors.New("the credentials are invalid (wrong username/password) or blocked")
@@ -77,6 +79,8 @@ var (
 	ErrVersionNotFound              = errors.New("invalid version were provided")
 	ErrUserNotFound                 = errors.New("user was not found")
 	ErrWorkbookNotFound             = errors.New("workbook was not found")
+	ErrTagNotFound                  = errors.New("tag was not found")
+	ErrWorkbookIDMismatch           = errors.New("workbook id mismatch")
 	ErrViewNotFound                 = errors.New("view was not found")
 	ErrGroupNotFound                = errors.New("group was not found")
 	ErrDomainNotFound               = errors.New("domain was not found")
@@ -107,6 +111,7 @@ var (
 		"400032": ErrDeleteFailed,
 		"400049": ErrAddTagsWorkbookFailed,
 		"400076": ErrAddTagsViewFailed,
+		"400078": ErrDeleteTagFromViewFailed,
 
 		"401000": ErrNoCredential,
 		"401001": ErrLoginError,
@@ -123,7 +128,9 @@ var (
 		"404000": ErrSiteNotFound,
 		"404001": ErrVersionNotFound,
 		"404002": ErrUserNotFound,
-		"404009": ErrWorkbookNotFound,
+		"404006": ErrWorkbookNotFound,
+		"404007": ErrTagNotFound,
+		"404009": ErrWorkbookIDMismatch,
 		"404011": ErrViewNotFound,
 		"404012": ErrGroupNotFound,
 		"404016": ErrDomainNotFound,
