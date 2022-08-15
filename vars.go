@@ -43,8 +43,6 @@ const (
 	acceptHeader        = `Accept`
 	mimeTypeJSON        = `application/json`
 	mimeTypeAny         = `*/*`
-	mimeTypePNG         = `image/png`
-	mimeTypePDF         = `application/pdf`
 	authorizationHeader = `Authorization`
 	bearerAuthorization = `Bearer %v`
 )
