@@ -565,7 +565,7 @@ func (w *workbooksViews) QueryViewImage(viewID string, maxAgeInMinutes ...int) (
 		return nil, ErrInvalidHost
 	}
 
-	url = fmt.Sprintf(viewImageParams, url, maxAge)
+	url = fmt.Sprintf(queryViewImageParams, url, maxAge)
 
 	res, err := w.base.c.R().
 		SetHeader(contentTypeHeader, mimeTypeJSON).
@@ -602,7 +602,54 @@ func (w *workbooksViews) QueryViewImage(viewID string, maxAgeInMinutes ...int) (
 // URI:
 //   GET /api/api-version/sites/site-id/views/view-id/pdf
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#query_view_pdf
-func (w *workbooksViews) QueryViewPDF() {}
+func (w *workbooksViews) QueryViewPDF(viewID string, maxAgeInMinutes ...int) ([]byte, error) {
+	if !w.base.Authentication.IsSignedIn() {
+		if err := w.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	maxAge := defaultMaxAge
+	if len(maxAgeInMinutes) > 0 {
+		maxAge = 1
+		if maxAgeInMinutes[0] > 1 {
+			maxAge = maxAgeInMinutes[0]
+		}
+	}
+
+	url := w.base.cfg.GetUrl(fmt.Sprintf(queryViewPDFUri, w.base.Authentication.siteID, viewID))
+	if url == "" {
+		return nil, ErrInvalidHost
+	}
+
+	url = fmt.Sprintf(queryViewPDFParams, url, maxAge)
+
+	res, err := w.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeAny).
+		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
+		Get(url)
+
+	if err != nil {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	if res.StatusCode() != http.StatusOK {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	return res.Body(), nil
+}
 
 // QueryWorkbook Returns information about the specified workbook, including information about views and tags.
 //

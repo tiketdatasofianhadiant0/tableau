@@ -13,7 +13,8 @@ const (
 	pagingParams               = `%s?pageSize=%d&pageNumber=%d%s`
 	mapAssetsParams            = `%s?mapAssetsTo=%s`
 	downloadPDFParams          = `%s?type=A4&orientation=Portrait&maxAge=%d`
-	viewImageParams            = `%s?resolution=high&maxAge=%d`
+	queryViewImageParams       = `%s?resolution=high&maxAge=%d`
+	queryViewPDFParams         = `%s?type=A4&orientation=Portrait&maxAge=%d`
 	getViewByPathParams        = `%s?pageSize=%d&pageNumber=%d&filter=viewUrlName:eq:%s`
 	queryViewForSiteParams     = `%s?pageSize=%d&pageNumber=%d`
 	queryViewForWorkbookParams = `%s?pageSize=%d&pageNumber=%d`
@@ -43,6 +44,7 @@ const (
 	queryViewsForSiteUri       = `sites/%s/views`
 	queryViewsForWorkbookUri   = `sites/%s/workbooks/%s/views`
 	queryViewImageUri          = `sites/%s/views/%s/image`
+	queryViewPDFUri            = `sites/%s/views/%s/pdf`
 
 	tokenLifetime = 120 * time.Minute
 	pageSize      = 500
@@ -88,6 +90,7 @@ var (
 	ErrActiveDirectoryNotConfigured = errors.New("active directory was not configured")
 	ErrPageSizeExceeded             = errors.New("the specified page size in larger than maximum page size")
 	ErrImportNameForbidden          = errors.New("imported name element different with referenced group-id")
+	ErrReadForbidden                = errors.New("do not have read access to this resource")
 	ErrCannotSwitchToSameSite       = errors.New("cannot switch to the same site")
 	ErrDownloadPDFDisabled          = errors.New("download PDF was disabled")
 	ErrQueryUserForbidden           = errors.New("user does not have permission to query user information")
@@ -141,6 +144,7 @@ var (
 		"403011": ErrActiveDirectoryNotConfigured,
 		"403014": ErrPageSizeExceeded,
 		"403020": ErrImportNameForbidden,
+		"403032": ErrReadForbidden,
 		"403070": ErrCannotSwitchToSameSite,
 		"403105": ErrDownloadPDFDisabled,
 		"403133": ErrQueryUserForbidden,
