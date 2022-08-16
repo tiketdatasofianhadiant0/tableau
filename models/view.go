@@ -12,4 +12,5 @@ type View struct {
 	Workbook    *Workbook  `json:"workbook,omitempty"`
 	Owner       *Owner     `json:"owner,omitempty"`
 	Project     *Project   `json:"project,omitempty"`
+	Usage       *Usage     `json:"usage,omitempty"`
 }

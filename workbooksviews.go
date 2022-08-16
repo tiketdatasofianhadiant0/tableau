@@ -415,14 +415,127 @@ func (w *workbooksViews) GetViewByPath(viewName string) ([]models.View, error) {
 // URI:
 //   GET /api/api-version/sites/site-id/views
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#query_views_for_site
-func (w *workbooksViews) QueryViewsForSite() {}
+func (w *workbooksViews) QueryViewsForSite(f models.Filter) ([]models.View, error) {
+	if !w.base.Authentication.IsSignedIn() {
+		if err := w.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	pageNum := 1
+	var result []models.View
+	for {
+		url := w.base.cfg.GetUrl(fmt.Sprintf(queryViewsForSiteUri, w.base.Authentication.siteID))
+		if url == "" {
+			return nil, ErrInvalidHost
+		}
+
+		url = fmt.Sprintf(queryViewForSiteParams, url, pageSize, pageNum)
+		if f != nil {
+			url = url + "&filter=" + f.String()
+		}
+
+		res, err := w.base.c.R().
+			SetHeader(contentTypeHeader, mimeTypeJSON).
+			SetHeader(acceptHeader, mimeTypeJSON).
+			SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
+			Get(url)
+
+		if err != nil {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		if res.StatusCode() != http.StatusOK {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		resBody := models.QueryViewBody{}
+		if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+			return nil, ErrFailedUnmarshalResponseBody
+		}
+
+		result = append(result, resBody.Views.View...)
+		if pageNum*pageSize >= resBody.Pagination.GetTotalAvailable() {
+			break
+		}
+
+		pageNum++
+	}
+
+	return result, nil
+}
 
 // QueryViewsForWorkbook Returns all the views for the specified workbook, optionally including usage statistics.
 //
 // URI:
 //   GET /api/api-version/sites/site-id/workbooks/workbook-id/views
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#query_views_for_workbook
-func (w *workbooksViews) QueryViewsForWorkbook() {}
+func (w *workbooksViews) QueryViewsForWorkbook(workbookID string) ([]models.View, error) {
+	if !w.base.Authentication.IsSignedIn() {
+		if err := w.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	pageNum := 1
+	var result []models.View
+	for {
+		url := w.base.cfg.GetUrl(fmt.Sprintf(queryViewsForWorkbookUri, w.base.Authentication.siteID, workbookID))
+		if url == "" {
+			return nil, ErrInvalidHost
+		}
+
+		url = fmt.Sprintf(queryViewForWorkbookParams, url, pageSize, pageNum)
+
+		res, err := w.base.c.R().
+			SetHeader(contentTypeHeader, mimeTypeJSON).
+			SetHeader(acceptHeader, mimeTypeJSON).
+			SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
+			Get(url)
+
+		if err != nil {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		if res.StatusCode() != http.StatusOK {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		resBody := models.QueryViewBody{}
+		if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+			return nil, ErrFailedUnmarshalResponseBody
+		}
+
+		result = append(result, resBody.Views.View...)
+		if pageNum*pageSize >= resBody.Pagination.GetTotalAvailable() {
+			break
+		}
+
+		pageNum++
+	}
+
+	return result, nil
+}
 
 // QueryViewImage Returns an image of the specified view.
 // If you make multiple requests for an image, subsequent calls return a cached version of the image.
