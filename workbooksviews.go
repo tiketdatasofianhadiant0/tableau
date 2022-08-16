@@ -40,7 +40,7 @@ func (w *workbooksViews) AddTagsToView(viewID string, tagNames []string) ([]mode
 		})(&struct{ Tag []models.Tag }{Tag: tags}),
 	}
 
-	url := w.base.cfg.GetUrl(fmt.Sprintf(addTagsToViewPath, w.base.Authentication.siteID, viewID))
+	url := w.base.cfg.GetUrl(fmt.Sprintf(addTagsToViewUri, w.base.Authentication.siteID, viewID))
 	if url == "" {
 		return nil, ErrInvalidHost
 	}
@@ -111,7 +111,7 @@ func (w *workbooksViews) AddTagsToWorkbook(workbookID string, tagNames []string)
 		})(&struct{ Tag []models.Tag }{Tag: tags}),
 	}
 
-	url := w.base.cfg.GetUrl(fmt.Sprintf(addTagsToWorkbookPath, w.base.Authentication.siteID, workbookID))
+	url := w.base.cfg.GetUrl(fmt.Sprintf(addTagsToWorkbookUri, w.base.Authentication.siteID, workbookID))
 	if url == "" {
 		return nil, ErrInvalidHost
 	}
@@ -165,7 +165,7 @@ func (w *workbooksViews) DeleteTagFromView(viewID, tagName string) error {
 		}
 	}
 
-	url := w.base.cfg.GetUrl(fmt.Sprintf(deleteTagFromViewPath, w.base.Authentication.siteID, viewID, QueryEscape(tagName)))
+	url := w.base.cfg.GetUrl(fmt.Sprintf(deleteTagFromViewUri, w.base.Authentication.siteID, viewID, QueryEscape(tagName)))
 	if url == "" {
 		return ErrInvalidHost
 	}
@@ -208,7 +208,7 @@ func (w *workbooksViews) DeleteTagFromWorkbook(workbookID, tagName string) error
 		}
 	}
 
-	url := w.base.cfg.GetUrl(fmt.Sprintf(deleteTagFromWorkbookPath, w.base.Authentication.siteID, workbookID, QueryEscape(tagName)))
+	url := w.base.cfg.GetUrl(fmt.Sprintf(deleteTagFromWorkbookUri, w.base.Authentication.siteID, workbookID, QueryEscape(tagName)))
 	if url == "" {
 		return ErrInvalidHost
 	}
@@ -265,7 +265,7 @@ func (w *workbooksViews) DownloadWorkbookPDF(workbookID string, maxAgeInMinutes 
 		}
 	}
 
-	url := w.base.cfg.GetUrl(fmt.Sprintf(downloadWorkbookPDFPath, w.base.Authentication.siteID, workbookID))
+	url := w.base.cfg.GetUrl(fmt.Sprintf(downloadWorkbookPDFUri, w.base.Authentication.siteID, workbookID))
 	if url == "" {
 		return nil, ErrInvalidHost
 	}
@@ -311,7 +311,7 @@ func (w *workbooksViews) GetView(viewID string) (*models.View, error) {
 		}
 	}
 
-	url := w.base.cfg.GetUrl(fmt.Sprintf(getViewPath, w.base.Authentication.siteID, viewID))
+	url := w.base.cfg.GetUrl(fmt.Sprintf(getViewUri, w.base.Authentication.siteID, viewID))
 	if url == "" {
 		return nil, ErrInvalidHost
 	}
@@ -353,7 +353,62 @@ func (w *workbooksViews) GetView(viewID string) (*models.View, error) {
 // URI:
 //   GET /api/api-version/sites/site-id/views?filter=viewUrlName:eq:view-name
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#get_view_by_path
-func (w *workbooksViews) GetViewByPath() {}
+func (w *workbooksViews) GetViewByPath(viewName string) ([]models.View, error) {
+	if !w.base.Authentication.IsSignedIn() {
+		if err := w.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	pageNum := 1
+	var result []models.View
+	for {
+		url := w.base.cfg.GetUrl(fmt.Sprintf(getViewByPathUri, w.base.Authentication.siteID))
+		if url == "" {
+			return nil, ErrInvalidHost
+		}
+
+		url = fmt.Sprintf(getViewByPathParams, url, pageSize, pageNum, QueryEscape(viewName))
+
+		res, err := w.base.c.R().
+			SetHeader(contentTypeHeader, mimeTypeJSON).
+			SetHeader(acceptHeader, mimeTypeJSON).
+			SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
+			Get(url)
+
+		if err != nil {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		if res.StatusCode() != http.StatusOK {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		resBody := models.QueryViewBody{}
+		if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+			return nil, ErrFailedUnmarshalResponseBody
+		}
+
+		result = append(result, resBody.Views.View...)
+		if pageNum*pageSize >= resBody.Pagination.GetTotalAvailable() {
+			break
+		}
+
+		pageNum++
+	}
+
+	return result, nil
+}
 
 // QueryViewsForSite Returns all the views for the specified site, optionally including usage statistics.
 //
@@ -392,7 +447,7 @@ func (w *workbooksViews) QueryViewImage(viewID string, maxAgeInMinutes ...int) (
 		}
 	}
 
-	url := w.base.cfg.GetUrl(fmt.Sprintf(queryViewImagePath, w.base.Authentication.siteID, viewID))
+	url := w.base.cfg.GetUrl(fmt.Sprintf(queryViewImageUri, w.base.Authentication.siteID, viewID))
 	if url == "" {
 		return nil, ErrInvalidHost
 	}

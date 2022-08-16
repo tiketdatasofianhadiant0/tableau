@@ -14,7 +14,7 @@ const (
 	mapAssetsParams          = `%s?mapAssetsTo=%s`
 	downloadPDFParams        = `%s?type=A4&orientation=Portrait&maxAge=%d`
 	viewImageParams          = `%s?resolution=high&maxAge=%d`
-	getViewByPathParams      = `%s?filter=viewUrlName:eq:%s`
+	getViewByPathParams      = `%s?pageSize=%d&pageNumber=%d&filter=viewUrlName:eq:%s`
 	signInUri                = `auth/signin`
 	signOutUri               = `auth/signout`
 	switchSiteUri            = `auth/switchSite`

@@ -58,7 +58,7 @@ func (a *authentication) SignIn(force ...bool) error {
 		},
 	}
 
-	url := a.base.cfg.GetUrl(signInPath)
+	url := a.base.cfg.GetUrl(signInUri)
 	if url == "" {
 		return ErrInvalidHost
 	}
@@ -111,7 +111,7 @@ func (a *authentication) SignOut() error {
 		return nil
 	}
 
-	url := a.base.cfg.GetUrl(signOutPath)
+	url := a.base.cfg.GetUrl(signOutUri)
 	if url == "" {
 		return ErrInvalidHost
 	}
@@ -174,7 +174,7 @@ func (a *authentication) SwitchSite(contentUrl string) error {
 		},
 	}
 
-	url := a.base.cfg.GetUrl(switchSitePath)
+	url := a.base.cfg.GetUrl(switchSiteUri)
 	if url == "" {
 		return ErrInvalidHost
 	}
