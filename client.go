@@ -9,8 +9,10 @@ type Client struct {
 	cfg            *Config
 	Authentication *authentication
 	UsersGroups    *usersGroups
+	WorkbooksViews *workbooksViews
 }
 
+// NewClient Initialize a new Tableau client.
 func NewClient(cfg Config) (*Client, error) {
 	if err := cfg.initConfig(); err != nil {
 		return nil, err
@@ -30,6 +32,9 @@ func NewClient(cfg Config) (*Client, error) {
 
 	ug := &usersGroups{base: client}
 	client.UsersGroups = ug
+
+	wv := &workbooksViews{base: client}
+	client.WorkbooksViews = wv
 
 	return client, nil
 }

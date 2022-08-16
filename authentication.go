@@ -58,14 +58,14 @@ func (a *authentication) SignIn(force ...bool) error {
 		},
 	}
 
-	url := a.base.cfg.GetUrl(signInPath)
+	url := a.base.cfg.GetUrl(signInUri)
 	if url == "" {
 		return ErrInvalidHost
 	}
 
 	res, err := a.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetBody(reqBody).
 		Post(url)
 	if err != nil {
@@ -111,14 +111,14 @@ func (a *authentication) SignOut() error {
 		return nil
 	}
 
-	url := a.base.cfg.GetUrl(signOutPath)
+	url := a.base.cfg.GetUrl(signOutUri)
 	if url == "" {
 		return ErrInvalidHost
 	}
 
 	res, err := a.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, a.getBearerToken()).
 		Post(url)
 	if err != nil {
@@ -174,14 +174,14 @@ func (a *authentication) SwitchSite(contentUrl string) error {
 		},
 	}
 
-	url := a.base.cfg.GetUrl(switchSitePath)
+	url := a.base.cfg.GetUrl(switchSiteUri)
 	if url == "" {
 		return ErrInvalidHost
 	}
 
 	res, err := a.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, a.getBearerToken()).
 		SetBody(reqBody).
 		Post(url)

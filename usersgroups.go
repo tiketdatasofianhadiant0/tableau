@@ -30,17 +30,18 @@ func (u *usersGroups) AddUserToGroup(userID, groupID string) (*models.User, erro
 		},
 	}
 
-	url := u.base.cfg.GetUrl(fmt.Sprintf(addUserToGroupPath, u.base.Authentication.siteID, groupID))
+	url := u.base.cfg.GetUrl(fmt.Sprintf(addUserToGroupUri, u.base.Authentication.siteID, groupID))
 	if url == "" {
 		return nil, ErrInvalidHost
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		SetBody(reqBody).
 		Post(url)
+
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -94,17 +95,18 @@ func (u *usersGroups) AddUserToSite(user *models.User) (*models.User, error) {
 		},
 	}
 
-	url := u.base.cfg.GetUrl(fmt.Sprintf(addUserToSitePath, u.base.Authentication.siteID))
+	url := u.base.cfg.GetUrl(fmt.Sprintf(addUserToSiteUri, u.base.Authentication.siteID))
 	if url == "" {
 		return nil, ErrInvalidHost
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		SetBody(reqBody).
 		Post(url)
+
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -158,17 +160,18 @@ func (u *usersGroups) CreateGroup(group *models.Group) (*models.Group, error) {
 		reqBody.Group.Import = group.Import
 	}
 
-	url := u.base.cfg.GetUrl(fmt.Sprintf(createGroupPath, u.base.Authentication.siteID))
+	url := u.base.cfg.GetUrl(fmt.Sprintf(createGroupUri, u.base.Authentication.siteID))
 	if url == "" {
 		return nil, ErrInvalidHost
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		SetBody(reqBody).
 		Post(url)
+
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -209,16 +212,17 @@ func (u *usersGroups) DeleteGroup(groupID string) error {
 		}
 	}
 
-	url := u.base.cfg.GetUrl(fmt.Sprintf(deleteGroupPath, u.base.Authentication.siteID, groupID))
+	url := u.base.cfg.GetUrl(fmt.Sprintf(deleteGroupUri, u.base.Authentication.siteID, groupID))
 	if url == "" {
 		return ErrInvalidHost
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		Delete(url)
+
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -256,17 +260,18 @@ func (u *usersGroups) GetGroupsForUser(userID string) ([]models.Group, error) {
 	pageNum := 1
 	var result []models.Group
 	for {
-		url := u.base.cfg.GetUrl(fmt.Sprintf(getGroupsForUserPath, u.base.Authentication.siteID, userID))
+		url := u.base.cfg.GetUrl(fmt.Sprintf(getGroupsForUserUri, u.base.Authentication.siteID, userID))
 		if url == "" {
 			return nil, ErrInvalidHost
 		}
 
 		url = fmt.Sprintf(pagingParams, url, pageSize, pageNum, query)
 		res, err := u.base.c.R().
-			SetHeader(contentTypeHeader, mimeTypeJson).
-			SetHeader(acceptHeader, mimeTypeJson).
+			SetHeader(contentTypeHeader, mimeTypeJSON).
+			SetHeader(acceptHeader, mimeTypeJSON).
 			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 			Get(url)
+
 		if err != nil {
 			errBody, err := models.NewErrorBody(res.Body())
 			if err != nil {
@@ -317,17 +322,18 @@ func (u *usersGroups) GetUsersInGroup(groupID string) ([]models.User, error) {
 	pageNum := 1
 	var result []models.User
 	for {
-		url := u.base.cfg.GetUrl(fmt.Sprintf(getUsersInGroupPath, u.base.Authentication.siteID, groupID))
+		url := u.base.cfg.GetUrl(fmt.Sprintf(getUsersInGroupUri, u.base.Authentication.siteID, groupID))
 		if url == "" {
 			return nil, ErrInvalidHost
 		}
 
 		url = fmt.Sprintf(pagingParams, url, pageSize, pageNum, query)
 		res, err := u.base.c.R().
-			SetHeader(contentTypeHeader, mimeTypeJson).
-			SetHeader(acceptHeader, mimeTypeJson).
+			SetHeader(contentTypeHeader, mimeTypeJSON).
+			SetHeader(acceptHeader, mimeTypeJSON).
 			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 			Get(url)
+
 		if err != nil {
 			errBody, err := models.NewErrorBody(res.Body())
 			if err != nil {
@@ -388,17 +394,18 @@ func (u *usersGroups) GetUsersOnSite(userNames ...string) ([]models.User, error)
 	pageNum := 1
 	var result []models.User
 	for {
-		url := u.base.cfg.GetUrl(fmt.Sprintf(getUsersOnSitePath, u.base.Authentication.siteID))
+		url := u.base.cfg.GetUrl(fmt.Sprintf(getUsersOnSiteUri, u.base.Authentication.siteID))
 		if url == "" {
 			return nil, ErrInvalidHost
 		}
 
 		url = fmt.Sprintf(pagingParams, url, pageSize, pageNum, query)
 		res, err := u.base.c.R().
-			SetHeader(contentTypeHeader, mimeTypeJson).
-			SetHeader(acceptHeader, mimeTypeJson).
+			SetHeader(contentTypeHeader, mimeTypeJSON).
+			SetHeader(acceptHeader, mimeTypeJSON).
 			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 			Get(url)
+
 		if err != nil {
 			errBody, err := models.NewErrorBody(res.Body())
 			if err != nil {
@@ -459,17 +466,18 @@ func (u *usersGroups) QueryGroups(groupNames ...string) ([]models.Group, error) 
 	pageNum := 1
 	var result []models.Group
 	for {
-		url := u.base.cfg.GetUrl(fmt.Sprintf(queryGroupsPath, u.base.Authentication.siteID))
+		url := u.base.cfg.GetUrl(fmt.Sprintf(queryGroupsUri, u.base.Authentication.siteID))
 		if url == "" {
 			return nil, ErrInvalidHost
 		}
 
 		url = fmt.Sprintf(pagingParams, url, pageSize, pageNum, query)
 		res, err := u.base.c.R().
-			SetHeader(contentTypeHeader, mimeTypeJson).
-			SetHeader(acceptHeader, mimeTypeJson).
+			SetHeader(contentTypeHeader, mimeTypeJSON).
+			SetHeader(acceptHeader, mimeTypeJSON).
 			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 			Get(url)
+
 		if err != nil {
 			errBody, err := models.NewErrorBody(res.Body())
 			if err != nil {
@@ -516,16 +524,17 @@ func (u *usersGroups) QueryUserOnSite(userID string) (*models.User, error) {
 		}
 	}
 
-	url := u.base.cfg.GetUrl(fmt.Sprintf(queryUserOnSitePath, u.base.Authentication.siteID, userID))
+	url := u.base.cfg.GetUrl(fmt.Sprintf(queryUserOnSiteUri, u.base.Authentication.siteID, userID))
 	if url == "" {
 		return nil, ErrInvalidHost
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		Get(url)
+
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -571,7 +580,7 @@ func (u *usersGroups) RemoveUserFromSite(userID string, newUserID ...string) err
 		}
 	}
 
-	url := u.base.cfg.GetUrl(fmt.Sprintf(removeUserFromSitePath, u.base.Authentication.siteID, userID))
+	url := u.base.cfg.GetUrl(fmt.Sprintf(removeUserFromSiteUri, u.base.Authentication.siteID, userID))
 	if url == "" {
 		return ErrInvalidHost
 	}
@@ -581,10 +590,11 @@ func (u *usersGroups) RemoveUserFromSite(userID string, newUserID ...string) err
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		Delete(url)
+
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -618,16 +628,17 @@ func (u *usersGroups) RemoveUserFromGroup(userID, groupID string) error {
 		}
 	}
 
-	url := u.base.cfg.GetUrl(fmt.Sprintf(removeUserFromGroupPath, u.base.Authentication.siteID, groupID, userID))
+	url := u.base.cfg.GetUrl(fmt.Sprintf(removeUserFromGroupUri, u.base.Authentication.siteID, groupID, userID))
 	if url == "" {
 		return ErrInvalidHost
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		Delete(url)
+
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -677,17 +688,18 @@ func (u *usersGroups) UpdateGroup(group *models.Group) (*models.Group, error) {
 		reqBody.Group.Import = group.Import
 	}
 
-	url := u.base.cfg.GetUrl(fmt.Sprintf(updateGroupPath, u.base.Authentication.siteID, *group.ID))
+	url := u.base.cfg.GetUrl(fmt.Sprintf(updateGroupUri, u.base.Authentication.siteID, *group.ID))
 	if url == "" {
 		return nil, ErrInvalidHost
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		SetBody(reqBody).
 		Put(url)
+
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -742,17 +754,18 @@ func (u *usersGroups) UpdateUser(user *models.User) (*models.User, error) {
 		},
 	}
 
-	url := u.base.cfg.GetUrl(fmt.Sprintf(updateUserPath, u.base.Authentication.siteID, *user.ID))
+	url := u.base.cfg.GetUrl(fmt.Sprintf(updateUserUri, u.base.Authentication.siteID, *user.ID))
 	if url == "" {
 		return nil, ErrInvalidHost
 	}
 
 	res, err := u.base.c.R().
-		SetHeader(contentTypeHeader, mimeTypeJson).
-		SetHeader(acceptHeader, mimeTypeJson).
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		SetBody(reqBody).
 		Put(url)
+	
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
