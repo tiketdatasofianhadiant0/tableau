@@ -45,6 +45,7 @@ const (
 	queryViewsForWorkbookUri   = `sites/%s/workbooks/%s/views`
 	queryViewImageUri          = `sites/%s/views/%s/image`
 	queryViewPDFUri            = `sites/%s/views/%s/pdf`
+	queryWorkbookUri           = `sites/%s/workbooks/%s`
 
 	tokenLifetime = 120 * time.Minute
 	pageSize      = 500

@@ -656,7 +656,49 @@ func (w *workbooksViews) QueryViewPDF(viewID string, maxAgeInMinutes ...int) ([]
 // URI:
 //   GET /api/api-version/sites/site-id/workbooks/workbook-id
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#query_workbook
-func (w *workbooksViews) QueryWorkbook() {}
+func (w *workbooksViews) QueryWorkbook(workbookID string) (*models.Workbook, error) {
+	if !w.base.Authentication.IsSignedIn() {
+		if err := w.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	url := w.base.cfg.GetUrl(fmt.Sprintf(queryWorkbookUri, w.base.Authentication.siteID, workbookID))
+	if url == "" {
+		return nil, ErrInvalidHost
+	}
+
+	res, err := w.base.c.R().
+		SetHeader(contentTypeHeader, mimeTypeJSON).
+		SetHeader(acceptHeader, mimeTypeJSON).
+		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
+		Get(url)
+
+	if err != nil {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	if res.StatusCode() != http.StatusOK {
+		errBody, err := models.NewErrorBody(res.Body())
+		if err != nil {
+			return nil, ErrUnknownError
+		}
+
+		return nil, errCodeMap[errBody.Error.Code]
+	}
+
+	resBody := models.WorkbookBody{}
+	if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+		return nil, ErrFailedUnmarshalResponseBody
+	}
+
+	return resBody.Workbook, nil
+}
 
 // QueryWorkbooksForSite Returns the workbooks on a site.
 // If the user is not an administrator, the method returns just the workbooks that the user has permissions to view.

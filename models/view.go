@@ -13,4 +13,7 @@ type View struct {
 	Owner       *Owner     `json:"owner,omitempty"`
 	Project     *Project   `json:"project,omitempty"`
 	Usage       *Usage     `json:"usage,omitempty"`
+	Tags        *struct {
+		Tag []Tag `json:"tag,omitempty"`
+	} `json:"tags,omitempty"`
 }
