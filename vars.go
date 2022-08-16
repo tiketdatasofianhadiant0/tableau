@@ -9,34 +9,36 @@ import (
 const (
 	DefaultVersion = "3.10"
 
-	filterByNameIn            = `&filter=name:in:[%s]`
-	pagingParams              = `%s?pageSize=%d&pageNumber=%d%s`
-	mapAssetsParams           = `%s?mapAssetsTo=%s`
-	downloadPDFParams         = `%s?type=A4&orientation=Portrait&maxAge=%d`
-	viewImageParams           = `%s?resolution=high&maxAge=%d`
-	signInPath                = `auth/signin`
-	signOutPath               = `auth/signout`
-	switchSitePath            = `auth/switchSite`
-	addUserToGroupPath        = `sites/%s/groups/%s/users`
-	addUserToSitePath         = `sites/%s/users`
-	createGroupPath           = `sites/%s/groups`
-	deleteGroupPath           = `sites/%s/groups/%s`
-	getGroupsForUserPath      = `sites/%s/users/%s/groups`
-	getUsersInGroupPath       = `sites/%s/groups/%s/users`
-	getUsersOnSitePath        = `sites/%s/users`
-	queryGroupsPath           = `sites/%s/groups`
-	queryUserOnSitePath       = `sites/%s/users/%s`
-	removeUserFromSitePath    = `sites/%s/users/%s`
-	removeUserFromGroupPath   = `sites/%s/groups/%s/users/%s`
-	updateGroupPath           = `sites/%s/groups/%s`
-	updateUserPath            = `sites/%s/users/%s`
-	addTagsToViewPath         = `sites/%s/views/%s/tags`
-	addTagsToWorkbookPath     = `sites/%s/workbooks/%s/tags`
-	deleteTagFromViewPath     = `sites/%s/views/%s/tags/%s`
-	deleteTagFromWorkbookPath = `sites/%s/workbooks/%s/tags/%s`
-	downloadWorkbookPDFPath   = `sites/%s/workbooks/%s/pdf`
-	getViewPath               = `sites/%s/views/%s`
-	queryViewImagePath        = `sites/%s/views/%s/image`
+	filterByNameIn           = `&filter=name:in:[%s]`
+	pagingParams             = `%s?pageSize=%d&pageNumber=%d%s`
+	mapAssetsParams          = `%s?mapAssetsTo=%s`
+	downloadPDFParams        = `%s?type=A4&orientation=Portrait&maxAge=%d`
+	viewImageParams          = `%s?resolution=high&maxAge=%d`
+	getViewByPathParams      = `%s?filter=viewUrlName:eq:%s`
+	signInUri                = `auth/signin`
+	signOutUri               = `auth/signout`
+	switchSiteUri            = `auth/switchSite`
+	addUserToGroupUri        = `sites/%s/groups/%s/users`
+	addUserToSiteUri         = `sites/%s/users`
+	createGroupUri           = `sites/%s/groups`
+	deleteGroupUri           = `sites/%s/groups/%s`
+	getGroupsForUserUri      = `sites/%s/users/%s/groups`
+	getUsersInGroupUri       = `sites/%s/groups/%s/users`
+	getUsersOnSiteUri        = `sites/%s/users`
+	queryGroupsUri           = `sites/%s/groups`
+	queryUserOnSiteUri       = `sites/%s/users/%s`
+	removeUserFromSiteUri    = `sites/%s/users/%s`
+	removeUserFromGroupUri   = `sites/%s/groups/%s/users/%s`
+	updateGroupUri           = `sites/%s/groups/%s`
+	updateUserUri            = `sites/%s/users/%s`
+	addTagsToViewUri         = `sites/%s/views/%s/tags`
+	addTagsToWorkbookUri     = `sites/%s/workbooks/%s/tags`
+	deleteTagFromViewUri     = `sites/%s/views/%s/tags/%s`
+	deleteTagFromWorkbookUri = `sites/%s/workbooks/%s/tags/%s`
+	downloadWorkbookPDFUri   = `sites/%s/workbooks/%s/pdf`
+	getViewUri               = `sites/%s/views/%s`
+	getViewByPathUri         = `sites/%s/views`
+	queryViewImageUri        = `sites/%s/views/%s/image`
 
 	tokenLifetime = 120 * time.Minute
 	pageSize      = 500
