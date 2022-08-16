@@ -2,8 +2,9 @@
 Simple Tableau client library for Go. This client library used by our internal project to automate users onboarding.
 
 ## Features
-* All [authentication](https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_authentication.htm) methods implemented.
-* All [groups and site users](https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm) methods implemented.
+* All [authentication method](https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_authentication.htm) methods implemented.
+* All [users and groups method](https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm) methods implemented.
+* Most [workbooks and view methods](https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm) methods implemented.
 
 ## Installation
 ```
@@ -46,3 +47,4 @@ if err != nil {
     panic(err)
 }
 ```
+You can browse examples folder for more examples.
