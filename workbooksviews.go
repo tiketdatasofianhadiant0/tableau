@@ -771,4 +771,62 @@ func (w *workbooksViews) QueryWorkbooksForSite(f models.Filter) ([]models.Workbo
 // URI:
 //   GET /api/api-version/sites/site-id/users/user-id/workbooks
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#query_workbooks_for_user
-func (w *workbooksViews) QueryWorkbooksForUser() {}
+func (w *workbooksViews) QueryWorkbooksForUser(ownedByUser ...bool) ([]models.Workbook, error) {
+	if !w.base.Authentication.IsSignedIn() {
+		if err := w.base.Authentication.SignIn(); err != nil {
+			return nil, err
+		}
+	}
+
+	pageNum := 1
+	var result []models.Workbook
+	for {
+		url := w.base.cfg.GetUrl(fmt.Sprintf(queryWorkbooksForUserUri, w.base.Authentication.siteID, w.base.Authentication.userID))
+		if url == "" {
+			return nil, ErrInvalidHost
+		}
+
+		url = fmt.Sprintf(queryWorkbooksForUserParams, url, pageSize, pageNum)
+		if len(ownedByUser) > 0 {
+			url = url + fmt.Sprintf("&ownedBy=%t", ownedByUser[0])
+		}
+
+		res, err := w.base.c.R().
+			SetHeader(contentTypeHeader, mimeTypeJSON).
+			SetHeader(acceptHeader, mimeTypeJSON).
+			SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
+			Get(url)
+
+		if err != nil {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		if res.StatusCode() != http.StatusOK {
+			errBody, err := models.NewErrorBody(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
+
+			return nil, errCodeMap[errBody.Error.Code]
+		}
+
+		resBody := models.QueryWorkbookBody{}
+		if err = json.Unmarshal(res.Body(), &resBody); err != nil {
+			return nil, ErrFailedUnmarshalResponseBody
+		}
+
+		result = append(result, resBody.Workbooks.Workbook...)
+		if pageNum*pageSize >= resBody.Pagination.GetTotalAvailable() {
+			break
+		}
+
+		pageNum++
+	}
+
+	return result, nil
+}

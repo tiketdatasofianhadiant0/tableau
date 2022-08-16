@@ -19,6 +19,7 @@ const (
 	queryViewForSiteParams      = `%s?pageSize=%d&pageNumber=%d`
 	queryViewForWorkbookParams  = `%s?pageSize=%d&pageNumber=%d`
 	queryWorkbooksForSiteParams = `%s?pageSize=%d&pageNumber=%d`
+	queryWorkbooksForUserParams = `%s?pageSize=%d&pageNumber=%d`
 	signInUri                   = `auth/signin`
 	signOutUri                  = `auth/signout`
 	switchSiteUri               = `auth/switchSite`
@@ -48,6 +49,7 @@ const (
 	queryViewPDFUri             = `sites/%s/views/%s/pdf`
 	queryWorkbookUri            = `sites/%s/workbooks/%s`
 	queryWorkbooksForSiteUri    = `sites/%s/workbooks`
+	queryWorkbooksForUserUri    = `sites/%s/users/%s/workbooks`
 
 	tokenLifetime = 120 * time.Minute
 	pageSize      = 500
@@ -92,6 +94,7 @@ var (
 	ErrForbidden                    = errors.New("user do not have sufficient permissions")
 	ErrActiveDirectoryNotConfigured = errors.New("active directory was not configured")
 	ErrPageSizeExceeded             = errors.New("the specified page size in larger than maximum page size")
+	ErrQueryWorkbookForbidden       = errors.New("user do not have access to query workbooks")
 	ErrImportNameForbidden          = errors.New("imported name element different with referenced group-id")
 	ErrReadForbidden                = errors.New("do not have read access to this resource")
 	ErrCannotSwitchToSameSite       = errors.New("cannot switch to the same site")
@@ -146,6 +149,7 @@ var (
 		"403004": ErrForbidden,
 		"403011": ErrActiveDirectoryNotConfigured,
 		"403014": ErrPageSizeExceeded,
+		"403018": ErrQueryWorkbookForbidden,
 		"403020": ErrImportNameForbidden,
 		"403032": ErrReadForbidden,
 		"403070": ErrCannotSwitchToSameSite,
