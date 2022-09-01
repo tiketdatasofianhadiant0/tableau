@@ -10,11 +10,11 @@ import (
 
 func main() {
 	cfg := tableau.Config{
-		Host:       "https://kagebunshin.kepo.ninja/",
+		Host:       "https://your-tableau-server.com/",
 		Version:    "3.12",
-		Username:   "risal.risal@tiket.com",
-		Password:   "9n230dikfsn0",
-		ContentUrl: "",
+		Username:   "your-user-name",
+		Password:   "your-password",
+		ContentUrl: "your-content-url",
 	}
 
 	client, err := tableau.NewClient(cfg)
