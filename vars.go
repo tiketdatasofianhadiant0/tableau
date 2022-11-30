@@ -58,6 +58,7 @@ const (
 	contentTypeHeader   = `Content-Type`
 	acceptHeader        = `Accept`
 	mimeTypeJSON        = `application/json`
+	mimeTypeImage       = `image/*`
 	mimeTypeAny         = `*/*`
 	authorizationHeader = `Authorization`
 	bearerAuthorization = `Bearer %v`
@@ -82,6 +83,7 @@ var (
 	ErrDeleteFailed           = errors.New("delete failed")
 	ErrAddTagsWorkbook        = errors.New("add tags to workbook failed")
 	ErrDeleteTagFromWorkbook  = errors.New("delete tag from workbook failed")
+	ErrQueryViewImageError    = errors.New("query view image error")
 	ErrAddTagsView            = errors.New("add tags to view failed")
 	ErrDeleteTagFromView      = errors.New("delete tag from view failed")
 	ErrDownloadWorkbookPDF    = errors.New("failed to download workbook as PDF")
@@ -137,6 +139,7 @@ var (
 		"400032": ErrDeleteFailed,
 		"400049": ErrAddTagsWorkbook,
 		"400051": ErrDeleteTagFromWorkbook,
+		"400074": ErrQueryViewImageError,
 		"400076": ErrAddTagsView,
 		"400078": ErrDeleteTagFromView,
 		"400101": ErrDownloadWorkbookPDF,

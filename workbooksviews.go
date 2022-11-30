@@ -590,14 +590,16 @@ func (w *workbooksViews) QueryViewImage(viewID string, maxAgeInMinutes ...int) (
 	res, err := w.base.c.R().
 		SetHeader(contentTypeHeader, mimeTypeJSON).
 		SetHeader(acceptHeader, mimeTypeAny).
-		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 		Get(url)
 
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
-			return nil, ErrUnknownError
+			errBody, err = models.NewErrorBodyXML(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
 		}
 
 		return nil, errCodeMap[errBody.Error.Code]
@@ -606,7 +608,10 @@ func (w *workbooksViews) QueryViewImage(viewID string, maxAgeInMinutes ...int) (
 	if res.StatusCode() != http.StatusOK {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
-			return nil, ErrUnknownError
+			errBody, err = models.NewErrorBodyXML(res.Body())
+			if err != nil {
+				return nil, ErrUnknownError
+			}
 		}
 
 		return nil, errCodeMap[errBody.Error.Code]
