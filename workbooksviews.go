@@ -14,7 +14,9 @@ type workbooksViews struct {
 // AddTagsToView Adds one or more tags to the specified view.
 //
 // URI:
-//   PUT /api/api-version/sites/site-id/views/view-id/tags
+//
+//	PUT /api/api-version/sites/site-id/views/view-id/tags
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#add_tags_to_view
 func (w *workbooksViews) AddTagsToView(viewID string, tagNames []string) ([]models.Tag, error) {
 	if !w.base.Authentication.IsSignedIn() {
@@ -85,7 +87,9 @@ func (w *workbooksViews) AddTagsToView(viewID string, tagNames []string) ([]mode
 // AddTagsToWorkbook Adds one or more tags to the specified workbook.
 //
 // URI:
-//   PUT /api/api-version/sites/site-id/workbooks/workbook-id/tags
+//
+//	PUT /api/api-version/sites/site-id/workbooks/workbook-id/tags
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#add_tags_to_workbook
 func (w *workbooksViews) AddTagsToWorkbook(workbookID string, tagNames []string) ([]models.Tag, error) {
 	if !w.base.Authentication.IsSignedIn() {
@@ -156,7 +160,9 @@ func (w *workbooksViews) AddTagsToWorkbook(workbookID string, tagNames []string)
 // DeleteTagFromView Deletes a tag from the specified view.
 //
 // URI:
-//   DELETE /api/api-version/sites/site-id/views/view-id/tags/tag-name
+//
+//	DELETE /api/api-version/sites/site-id/views/view-id/tags/tag-name
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#delete_tag_from_view
 func (w *workbooksViews) DeleteTagFromView(viewID, tagName string) error {
 	if !w.base.Authentication.IsSignedIn() {
@@ -199,7 +205,9 @@ func (w *workbooksViews) DeleteTagFromView(viewID, tagName string) error {
 // DeleteTagFromWorkbook Deletes a tag from the specified workbook.
 //
 // URI:
-//   DELETE /api/api-version/sites/site-id/workbooks/workbook-id/tags/tag-name
+//
+//	DELETE /api/api-version/sites/site-id/workbooks/workbook-id/tags/tag-name
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#delete_tag_from_workbook
 func (w *workbooksViews) DeleteTagFromWorkbook(workbookID, tagName string) error {
 	if !w.base.Authentication.IsSignedIn() {
@@ -248,7 +256,9 @@ func (w *workbooksViews) DeleteTagFromWorkbook(workbookID, tagName string) error
 // To decrease the amount of time that a workbook is cached, use the maxAge parameter.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/workbooks/workbook-id/pdf?type=page-type&orientation=page-orientation
+//
+//	GET /api/api-version/sites/site-id/workbooks/workbook-id/pdf?type=page-type&orientation=page-orientation
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#download_workbook_pdf
 func (w *workbooksViews) DownloadWorkbookPDF(workbookID string, maxAgeInMinutes ...int) ([]byte, error) {
 	if !w.base.Authentication.IsSignedIn() {
@@ -302,7 +312,9 @@ func (w *workbooksViews) DownloadWorkbookPDF(workbookID string, maxAgeInMinutes 
 // GetView Gets the details of a specific view.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/views/view-id
+//
+//	GET /api/api-version/sites/site-id/views/view-id
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#get_view
 func (w *workbooksViews) GetView(viewID string) (*models.View, error) {
 	if !w.base.Authentication.IsSignedIn() {
@@ -351,7 +363,9 @@ func (w *workbooksViews) GetView(viewID string) (*models.View, error) {
 // GetViewByPath Gets the details of all views in a site with a specified name.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/views?filter=viewUrlName:eq:view-name
+//
+//	GET /api/api-version/sites/site-id/views?filter=viewUrlName:eq:view-name
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#get_view_by_path
 func (w *workbooksViews) GetViewByPath(viewName string) ([]models.View, error) {
 	if !w.base.Authentication.IsSignedIn() {
@@ -413,7 +427,9 @@ func (w *workbooksViews) GetViewByPath(viewName string) ([]models.View, error) {
 // QueryViewsForSite Returns all the views for the specified site, optionally including usage statistics.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/views
+//
+//	GET /api/api-version/sites/site-id/views
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#query_views_for_site
 func (w *workbooksViews) QueryViewsForSite(f models.Filter) ([]models.View, error) {
 	if !w.base.Authentication.IsSignedIn() {
@@ -478,7 +494,9 @@ func (w *workbooksViews) QueryViewsForSite(f models.Filter) ([]models.View, erro
 // QueryViewsForWorkbook Returns all the views for the specified workbook, optionally including usage statistics.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/workbooks/workbook-id/views
+//
+//	GET /api/api-version/sites/site-id/workbooks/workbook-id/views
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#query_views_for_workbook
 func (w *workbooksViews) QueryViewsForWorkbook(workbookID string) ([]models.View, error) {
 	if !w.base.Authentication.IsSignedIn() {
@@ -543,7 +561,9 @@ func (w *workbooksViews) QueryViewsForWorkbook(workbookID string) ([]models.View
 // To decrease the amount of time that an image is cached, use the maxAge parameter.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/views/view-id/image
+//
+//	GET /api/api-version/sites/site-id/views/view-id/image
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#query_view_image
 func (w *workbooksViews) QueryViewImage(viewID string, maxAgeInMinutes ...int) ([]byte, error) {
 	if !w.base.Authentication.IsSignedIn() {
@@ -570,6 +590,7 @@ func (w *workbooksViews) QueryViewImage(viewID string, maxAgeInMinutes ...int) (
 	res, err := w.base.c.R().
 		SetHeader(contentTypeHeader, mimeTypeJSON).
 		SetHeader(acceptHeader, mimeTypeAny).
+		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 		Get(url)
 
@@ -600,7 +621,9 @@ func (w *workbooksViews) QueryViewImage(viewID string, maxAgeInMinutes ...int) (
 // To decrease the amount of time that an PDF is cached, use the maxAge parameter.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/views/view-id/pdf
+//
+//	GET /api/api-version/sites/site-id/views/view-id/pdf
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#query_view_pdf
 func (w *workbooksViews) QueryViewPDF(viewID string, maxAgeInMinutes ...int) ([]byte, error) {
 	if !w.base.Authentication.IsSignedIn() {
@@ -654,7 +677,9 @@ func (w *workbooksViews) QueryViewPDF(viewID string, maxAgeInMinutes ...int) ([]
 // QueryWorkbook Returns information about the specified workbook, including information about views and tags.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/workbooks/workbook-id
+//
+//	GET /api/api-version/sites/site-id/workbooks/workbook-id
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#query_workbook
 func (w *workbooksViews) QueryWorkbook(workbookID string) (*models.Workbook, error) {
 	if !w.base.Authentication.IsSignedIn() {
@@ -704,7 +729,9 @@ func (w *workbooksViews) QueryWorkbook(workbookID string) (*models.Workbook, err
 // If the user is not an administrator, the method returns just the workbooks that the user has permissions to view.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/workbooks
+//
+//	GET /api/api-version/sites/site-id/workbooks
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#query_workbooks_for_site
 func (w *workbooksViews) QueryWorkbooksForSite(f models.Filter) ([]models.Workbook, error) {
 	if !w.base.Authentication.IsSignedIn() {
@@ -769,7 +796,9 @@ func (w *workbooksViews) QueryWorkbooksForSite(f models.Filter) ([]models.Workbo
 // QueryWorkbooksForUser Returns the workbooks that the specified user owns in addition to those that the user has Read (view) permissions for.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/users/user-id/workbooks
+//
+//	GET /api/api-version/sites/site-id/users/user-id/workbooks
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#query_workbooks_for_user
 func (w *workbooksViews) QueryWorkbooksForUser(ownedByUser ...bool) ([]models.Workbook, error) {
 	if !w.base.Authentication.IsSignedIn() {
