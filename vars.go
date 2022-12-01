@@ -13,7 +13,7 @@ const (
 	pagingParams                = `%s?pageSize=%d&pageNumber=%d%s`
 	mapAssetsParams             = `%s?mapAssetsTo=%s`
 	downloadPDFParams           = `%s?type=A4&orientation=Portrait&maxAge=%d`
-	queryViewImageParams        = `%s?resolution=high&maxAge=%d`
+	queryViewImageParams        = `%s%s`
 	queryViewPDFParams          = `%s?type=A4&orientation=Portrait&maxAge=%d`
 	getViewByPathParams         = `%s?pageSize=%d&pageNumber=%d&filter=viewUrlName:eq:%s`
 	queryViewForSiteParams      = `%s?pageSize=%d&pageNumber=%d`

@@ -10,6 +10,12 @@ const (
 	SiteRoleCreator                   = `Creator`
 	SiteRoleSiteAdministratorExplorer = `SiteAdministratorExplorer`
 	SiteRoleSiteAdministratorCreator  = `SiteAdministratorCreator`
+
+	ImageResolutionHigh = `high`
+	ImageResolutionLow  = `low`
+
+	defaultMaxAge = 60
+	minMaxAge     = 1
 )
 
 var (
