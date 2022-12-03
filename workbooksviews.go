@@ -565,19 +565,16 @@ func (w *workbooksViews) QueryViewsForWorkbook(workbookID string) ([]models.View
 //	GET /api/api-version/sites/site-id/views/view-id/image
 //
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_workbooks_and_views.htm#query_view_image
-func (w *workbooksViews) QueryViewImage(viewID string, maxAgeInMinutes ...int) ([]byte, error) {
+func (w *workbooksViews) QueryViewImage(viewID string, option ...models.QueryViewImageOption) ([]byte, error) {
 	if !w.base.Authentication.IsSignedIn() {
 		if err := w.base.Authentication.SignIn(); err != nil {
 			return nil, err
 		}
 	}
 
-	maxAge := defaultMaxAge
-	if len(maxAgeInMinutes) > 0 {
-		maxAge = 1
-		if maxAgeInMinutes[0] > 1 {
-			maxAge = maxAgeInMinutes[0]
-		}
+	opt := models.QueryViewImageOption{}
+	if len(option) > 0 {
+		opt = option[0]
 	}
 
 	url := w.base.cfg.GetUrl(fmt.Sprintf(queryViewImageUri, w.base.Authentication.siteID, viewID))
@@ -585,8 +582,8 @@ func (w *workbooksViews) QueryViewImage(viewID string, maxAgeInMinutes ...int) (
 		return nil, ErrInvalidHost
 	}
 
-	url = fmt.Sprintf(queryViewImageParams, url, maxAge)
-
+	url = fmt.Sprintf(queryViewImageParams, url, opt.Encode())
+	fmt.Println(url)
 	res, err := w.base.c.R().
 		SetHeader(contentTypeHeader, mimeTypeJSON).
 		SetHeader(acceptHeader, mimeTypeAny).
