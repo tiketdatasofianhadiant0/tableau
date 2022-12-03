@@ -583,7 +583,7 @@ func (w *workbooksViews) QueryViewImage(viewID string, option ...models.QueryVie
 	}
 
 	url = fmt.Sprintf(queryViewImageParams, url, opt.Encode())
-
+	fmt.Println(url)
 	res, err := w.base.c.R().
 		SetHeader(contentTypeHeader, mimeTypeJSON).
 		SetHeader(acceptHeader, mimeTypeAny).

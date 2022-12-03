@@ -86,6 +86,7 @@ var (
 	ErrQueryViewImageError    = errors.New("query view image error")
 	ErrAddTagsView            = errors.New("add tags to view failed")
 	ErrDeleteTagFromView      = errors.New("delete tag from view failed")
+	ErrUnsupportedParameter   = errors.New("unsupported parameter")
 	ErrDownloadWorkbookPDF    = errors.New("failed to download workbook as PDF")
 
 	ErrNoCredential      = errors.New("no credentials were provided")
@@ -142,6 +143,7 @@ var (
 		"400074": ErrQueryViewImageError,
 		"400076": ErrAddTagsView,
 		"400078": ErrDeleteTagFromView,
+		"409004": ErrUnsupportedParameter,
 		"400101": ErrDownloadWorkbookPDF,
 
 		"401000": ErrNoCredential,

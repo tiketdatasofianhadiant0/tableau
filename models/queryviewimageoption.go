@@ -7,14 +7,13 @@ import (
 )
 
 type QueryViewImageOption struct {
-	maxAge     int
-	resolution string
-	params     map[string]string
+	MaxAge int
+	Params map[string]string
 }
 
 func (o *QueryViewImageOption) GetMaxAge() int {
-	if o.maxAge >= minMaxAge {
-		return o.maxAge
+	if o.MaxAge >= minMaxAge {
+		return o.MaxAge
 	}
 
 	return defaultMaxAge
@@ -22,40 +21,22 @@ func (o *QueryViewImageOption) GetMaxAge() int {
 
 func (o *QueryViewImageOption) SetMaxAge(age int) {
 	if age > minMaxAge {
-		o.maxAge = age
+		o.MaxAge = age
 		return
 	}
 
-	o.maxAge = minMaxAge
-}
-
-func (o *QueryViewImageOption) GetImageResolution() string {
-	switch o.resolution {
-	case ImageResolutionHigh, ImageResolutionLow:
-		return o.resolution
-	default:
-		return ImageResolutionHigh
-	}
-}
-
-func (o *QueryViewImageOption) SetImageResolution(resolution string) {
-	switch resolution {
-	case ImageResolutionHigh, ImageResolutionLow:
-		o.resolution = resolution
-	default:
-		o.resolution = ImageResolutionHigh
-	}
+	o.MaxAge = minMaxAge
 }
 
 func (o *QueryViewImageOption) AddParam(key, value string) {
-	o.params[key] = value
+	o.Params[key] = value
 }
 
 func (o *QueryViewImageOption) DeleteParam(key string) string {
 	value := ""
-	if v, ok := o.params[key]; ok {
+	if v, ok := o.Params[key]; ok {
 		value = v
-		delete(o.params, key)
+		delete(o.Params, key)
 	}
 
 	return value
@@ -63,13 +44,13 @@ func (o *QueryViewImageOption) DeleteParam(key string) string {
 
 func (o *QueryViewImageOption) Encode() string {
 	params := strings.Builder{}
-	for key, value := range o.params {
+	for key, value := range o.Params {
 		params.WriteString("&")
 		params.WriteString(url.PathEscape(fmt.Sprintf("%s=%s", key, value)))
 	}
 
 	return fmt.Sprintf("?resolution=%s&maxAge=%d%s",
-		o.GetImageResolution(),
+		ImageResolutionHigh,
 		o.GetMaxAge(),
 		params.String(),
 	)

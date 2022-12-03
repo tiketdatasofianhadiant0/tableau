@@ -12,7 +12,6 @@ const (
 	SiteRoleSiteAdministratorCreator  = `SiteAdministratorCreator`
 
 	ImageResolutionHigh = `high`
-	ImageResolutionLow  = `low`
 
 	defaultMaxAge = 60
 	minMaxAge     = 1
