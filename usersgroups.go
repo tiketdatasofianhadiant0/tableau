@@ -15,7 +15,9 @@ type usersGroups struct {
 // AddUserToGroup Adds a user to the specified group.
 //
 // URI:
-//   POST /api/api-version/sites/site-id/groups/group-id/users
+//
+//	POST /api/api-version/sites/site-id/groups/group-id/users
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#add_user_to_group
 func (u *usersGroups) AddUserToGroup(userID, groupID string) (*models.User, error) {
 	if !u.base.Authentication.IsSignedIn() {
@@ -42,6 +44,7 @@ func (u *usersGroups) AddUserToGroup(userID, groupID string) (*models.User, erro
 		SetBody(reqBody).
 		Post(url)
 
+	u.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -75,7 +78,9 @@ func (u *usersGroups) AddUserToGroup(userID, groupID string) (*models.User, erro
 // The user can click the link in the invitation to sign in and update their full name and password.
 //
 // URI:
-//   POST /api/api-version/sites/site-id/users
+//
+//	POST /api/api-version/sites/site-id/users
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#add_user_to_site
 func (u *usersGroups) AddUserToSite(user *models.User) (*models.User, error) {
 	if !u.base.Authentication.IsSignedIn() {
@@ -107,6 +112,7 @@ func (u *usersGroups) AddUserToSite(user *models.User) (*models.User, error) {
 		SetBody(reqBody).
 		Post(url)
 
+	u.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -136,7 +142,9 @@ func (u *usersGroups) AddUserToSite(user *models.User) (*models.User, error) {
 // CreateGroup Creates a group.
 //
 // URI:
-//   POST /api/api-version/sites/site-id/groups
+//
+//	POST /api/api-version/sites/site-id/groups
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#create_group
 func (u *usersGroups) CreateGroup(group *models.Group) (*models.Group, error) {
 	if !u.base.Authentication.IsSignedIn() {
@@ -172,6 +180,7 @@ func (u *usersGroups) CreateGroup(group *models.Group) (*models.Group, error) {
 		SetBody(reqBody).
 		Post(url)
 
+	u.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -203,7 +212,9 @@ func (u *usersGroups) CreateGroup(group *models.Group) (*models.Group, error) {
 // Any permissions that were previously assigned to the group no longer apply.
 //
 // URI:
-//   DELETE /api/api-version/sites/site-id/groups/group-id
+//
+//	DELETE /api/api-version/sites/site-id/groups/group-id
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#delete_group
 func (u *usersGroups) DeleteGroup(groupID string) error {
 	if !u.base.Authentication.IsSignedIn() {
@@ -223,6 +234,7 @@ func (u *usersGroups) DeleteGroup(groupID string) error {
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		Delete(url)
 
+	u.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -247,7 +259,9 @@ func (u *usersGroups) DeleteGroup(groupID string) error {
 // GetGroupsForUser Gets a list of groups of which the specified user is a member.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/users/user-id/groups
+//
+//	GET /api/api-version/sites/site-id/users/user-id/groups
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#get_groups_for_a_user
 func (u *usersGroups) GetGroupsForUser(userID string) ([]models.Group, error) {
 	if !u.base.Authentication.IsSignedIn() {
@@ -272,6 +286,7 @@ func (u *usersGroups) GetGroupsForUser(userID string) ([]models.Group, error) {
 			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 			Get(url)
 
+		u.base.SetResponse(*res)
 		if err != nil {
 			errBody, err := models.NewErrorBody(res.Body())
 			if err != nil {
@@ -309,7 +324,9 @@ func (u *usersGroups) GetGroupsForUser(userID string) ([]models.Group, error) {
 // GetUsersInGroup Gets a list of users in the specified group.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/groups/group-id/users
+//
+//	GET /api/api-version/sites/site-id/groups/group-id/users
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#get_users_in_group
 func (u *usersGroups) GetUsersInGroup(groupID string) ([]models.User, error) {
 	if !u.base.Authentication.IsSignedIn() {
@@ -334,6 +351,7 @@ func (u *usersGroups) GetUsersInGroup(groupID string) ([]models.User, error) {
 			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 			Get(url)
 
+		u.base.SetResponse(*res)
 		if err != nil {
 			errBody, err := models.NewErrorBody(res.Body())
 			if err != nil {
@@ -371,7 +389,9 @@ func (u *usersGroups) GetUsersInGroup(groupID string) ([]models.User, error) {
 // GetUsersOnSite Returns the users associated with the specified site.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/users
+//
+//	GET /api/api-version/sites/site-id/users
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#get_users_on_site
 func (u *usersGroups) GetUsersOnSite(userNames ...string) ([]models.User, error) {
 	if !u.base.Authentication.IsSignedIn() {
@@ -406,6 +426,7 @@ func (u *usersGroups) GetUsersOnSite(userNames ...string) ([]models.User, error)
 			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 			Get(url)
 
+		u.base.SetResponse(*res)
 		if err != nil {
 			errBody, err := models.NewErrorBody(res.Body())
 			if err != nil {
@@ -443,7 +464,9 @@ func (u *usersGroups) GetUsersOnSite(userNames ...string) ([]models.User, error)
 // QueryGroups Returns a list of groups on the specified site, with optional parameters for specifying the paging of large results.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/groups
+//
+//	GET /api/api-version/sites/site-id/groups
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#query_groups
 func (u *usersGroups) QueryGroups(groupNames ...string) ([]models.Group, error) {
 	if !u.base.Authentication.IsSignedIn() {
@@ -478,6 +501,7 @@ func (u *usersGroups) QueryGroups(groupNames ...string) ([]models.Group, error) 
 			SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 			Get(url)
 
+		u.base.SetResponse(*res)
 		if err != nil {
 			errBody, err := models.NewErrorBody(res.Body())
 			if err != nil {
@@ -515,7 +539,9 @@ func (u *usersGroups) QueryGroups(groupNames ...string) ([]models.Group, error) 
 // QueryUserOnSite Returns information about the specified user.
 //
 // URI:
-//   GET /api/api-version/sites/site-id/users/user-id
+//
+//	GET /api/api-version/sites/site-id/users/user-id
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#query_user_on_site
 func (u *usersGroups) QueryUserOnSite(userID string) (*models.User, error) {
 	if !u.base.Authentication.IsSignedIn() {
@@ -535,6 +561,7 @@ func (u *usersGroups) QueryUserOnSite(userID string) (*models.User, error) {
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		Get(url)
 
+	u.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -571,7 +598,9 @@ func (u *usersGroups) QueryUserOnSite(userID string) (*models.User, error) {
 // If a user is removed from all sites that the user is a member of, the user is deleted.
 //
 // URI:
-//   DELETE /api/api-version/sites/site-id/users/user-id
+//
+//	DELETE /api/api-version/sites/site-id/users/user-id
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#remove_user_from_site
 func (u *usersGroups) RemoveUserFromSite(userID string, newUserID ...string) error {
 	if !u.base.Authentication.IsSignedIn() {
@@ -595,6 +624,7 @@ func (u *usersGroups) RemoveUserFromSite(userID string, newUserID ...string) err
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		Delete(url)
 
+	u.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -619,7 +649,9 @@ func (u *usersGroups) RemoveUserFromSite(userID string, newUserID ...string) err
 // RemoveUserFromGroup Removes a user from the specified group.
 //
 // URI:
-//   DELETE /api/api-version/sites/site-id/groups/group-id/users/user-id
+//
+//	DELETE /api/api-version/sites/site-id/groups/group-id/users/user-id
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#remove_user_to_group
 func (u *usersGroups) RemoveUserFromGroup(userID, groupID string) error {
 	if !u.base.Authentication.IsSignedIn() {
@@ -639,6 +671,7 @@ func (u *usersGroups) RemoveUserFromGroup(userID, groupID string) error {
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		Delete(url)
 
+	u.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -664,7 +697,9 @@ func (u *usersGroups) RemoveUserFromGroup(userID, groupID string) error {
 // If Tableau Server or Tableau Online site is configured to use local authentication, the method lets you update the group name.
 //
 // URI:
-//   PUT /api/api-version/sites/site-id/groups/group-id
+//
+//	PUT /api/api-version/sites/site-id/groups/group-id
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#update_group
 func (u *usersGroups) UpdateGroup(group *models.Group) (*models.Group, error) {
 	if !u.base.Authentication.IsSignedIn() {
@@ -700,6 +735,7 @@ func (u *usersGroups) UpdateGroup(group *models.Group) (*models.Group, error) {
 		SetBody(reqBody).
 		Put(url)
 
+	u.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -731,7 +767,9 @@ func (u *usersGroups) UpdateGroup(group *models.Group) (*models.Group, error) {
 // For Tableau Online, you can update the site role for a user, but you cannot update or change a user's password, user name (email address), or full name.
 //
 // URI:
-//   PUT /api/api-version/sites/site-id/users/user-id
+//
+//	PUT /api/api-version/sites/site-id/users/user-id
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_users_and_groups.htm#update_user
 func (u *usersGroups) UpdateUser(user *models.User) (*models.User, error) {
 	if !u.base.Authentication.IsSignedIn() {
@@ -765,7 +803,8 @@ func (u *usersGroups) UpdateUser(user *models.User) (*models.User, error) {
 		SetHeader(authorizationHeader, u.base.Authentication.getBearerToken()).
 		SetBody(reqBody).
 		Put(url)
-	
+
+	u.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {

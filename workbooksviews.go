@@ -54,6 +54,7 @@ func (w *workbooksViews) AddTagsToView(viewID string, tagNames []string) ([]mode
 		SetBody(reqBody).
 		Put(url)
 
+	w.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -127,6 +128,7 @@ func (w *workbooksViews) AddTagsToWorkbook(workbookID string, tagNames []string)
 		SetBody(reqBody).
 		Put(url)
 
+	w.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -181,6 +183,8 @@ func (w *workbooksViews) DeleteTagFromView(viewID, tagName string) error {
 		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 		Delete(url)
+
+	w.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -226,6 +230,8 @@ func (w *workbooksViews) DeleteTagFromWorkbook(workbookID, tagName string) error
 		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 		Delete(url)
+
+	w.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -288,6 +294,7 @@ func (w *workbooksViews) DownloadWorkbookPDF(workbookID string, maxAgeInMinutes 
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 		Get(url)
 
+	w.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -334,6 +341,7 @@ func (w *workbooksViews) GetView(viewID string) (*models.View, error) {
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 		Get(url)
 
+	w.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -390,6 +398,7 @@ func (w *workbooksViews) GetViewByPath(viewName string) ([]models.View, error) {
 			SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 			Get(url)
 
+		w.base.SetResponse(*res)
 		if err != nil {
 			errBody, err := models.NewErrorBody(res.Body())
 			if err != nil {
@@ -457,6 +466,7 @@ func (w *workbooksViews) QueryViewsForSite(f models.Filter) ([]models.View, erro
 			SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 			Get(url)
 
+		w.base.SetResponse(*res)
 		if err != nil {
 			errBody, err := models.NewErrorBody(res.Body())
 			if err != nil {
@@ -521,6 +531,7 @@ func (w *workbooksViews) QueryViewsForWorkbook(workbookID string) ([]models.View
 			SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 			Get(url)
 
+		w.base.SetResponse(*res)
 		if err != nil {
 			errBody, err := models.NewErrorBody(res.Body())
 			if err != nil {
@@ -590,6 +601,7 @@ func (w *workbooksViews) QueryViewImage(viewID string, option ...models.QueryVie
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 		Get(url)
 
+	w.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -655,6 +667,7 @@ func (w *workbooksViews) QueryViewPDF(viewID string, maxAgeInMinutes ...int) ([]
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 		Get(url)
 
+	w.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -701,6 +714,7 @@ func (w *workbooksViews) QueryWorkbook(workbookID string) (*models.Workbook, err
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 		Get(url)
 
+	w.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -761,6 +775,7 @@ func (w *workbooksViews) QueryWorkbooksForSite(f models.Filter) ([]models.Workbo
 			SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 			Get(url)
 
+		w.base.SetResponse(*res)
 		if err != nil {
 			errBody, err := models.NewErrorBody(res.Body())
 			if err != nil {
@@ -828,6 +843,7 @@ func (w *workbooksViews) QueryWorkbooksForUser(ownedByUser ...bool) ([]models.Wo
 			SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
 			Get(url)
 
+		w.base.SetResponse(*res)
 		if err != nil {
 			errBody, err := models.NewErrorBody(res.Body())
 			if err != nil {

@@ -40,7 +40,9 @@ func (a *authentication) IsSignedIn() bool {
 // Typically, a credentials token is valid for 120 minutes.
 //
 // URI:
-//   POST /api/api-version/auth/signin
+//
+//	POST /api/api-version/auth/signin
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_authentication.htm#sign_in
 func (a *authentication) SignIn(force ...bool) error {
 	forceSignIn := len(force) > 0 && force[0]
@@ -68,6 +70,8 @@ func (a *authentication) SignIn(force ...bool) error {
 		SetHeader(acceptHeader, mimeTypeJSON).
 		SetBody(reqBody).
 		Post(url)
+
+	a.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -104,7 +108,9 @@ func (a *authentication) SignIn(force ...bool) error {
 // This call invalidates the authentication token that is created by a call to Sign In.
 //
 // URI:
-//   POST /api/api-version/auth/signout
+//
+//	POST /api/api-version/auth/signout
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_authentication.htm#sign_out
 func (a *authentication) SignOut() error {
 	if !a.IsSignedIn() {
@@ -121,6 +127,8 @@ func (a *authentication) SignOut() error {
 		SetHeader(acceptHeader, mimeTypeJSON).
 		SetHeader(authorizationHeader, a.getBearerToken()).
 		Post(url)
+
+	a.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
@@ -155,7 +163,9 @@ func (a *authentication) SignOut() error {
 // By default, the token is good for 120 minutes.
 //
 // URI:
-//   POST /api/api-version/auth/switchSite
+//
+//	POST /api/api-version/auth/switchSite
+//
 // Reference: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_ref_authentication.htm#switch_site
 func (a *authentication) SwitchSite(contentUrl string) error {
 	if !a.IsSignedIn() {
@@ -185,6 +195,8 @@ func (a *authentication) SwitchSite(contentUrl string) error {
 		SetHeader(authorizationHeader, a.getBearerToken()).
 		SetBody(reqBody).
 		Post(url)
+
+	a.base.SetResponse(*res)
 	if err != nil {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
