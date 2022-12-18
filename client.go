@@ -6,10 +6,21 @@ import (
 
 type Client struct {
 	c              *resty.Client
+	r              *resty.Response
 	cfg            *Config
 	Authentication *authentication
 	UsersGroups    *usersGroups
 	WorkbooksViews *workbooksViews
+}
+
+// GetResponse return last response object returned by resty.Request.
+func (c *Client) GetResponse() *resty.Response {
+	return c.r
+}
+
+// SetResponse set last response object created by resty.Request.
+func (c *Client) SetResponse(r resty.Response) {
+	c.r = &r
 }
 
 // NewClient Initialize a new Tableau client.
