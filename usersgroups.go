@@ -814,7 +814,7 @@ func (u *usersGroups) UpdateUser(user *models.User) (*models.User, error) {
 		return nil, errCodeMap[errBody.Error.Code]
 	}
 
-	if res.StatusCode() != http.StatusCreated {
+	if res.StatusCode() != http.StatusOK {
 		errBody, err := models.NewErrorBody(res.Body())
 		if err != nil {
 			return nil, ErrUnknownError
