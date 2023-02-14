@@ -51,7 +51,7 @@ func (u *usersGroups) AddUserToGroup(userID, groupID string) (*models.User, erro
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusOK {
@@ -60,7 +60,7 @@ func (u *usersGroups) AddUserToGroup(userID, groupID string) (*models.User, erro
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	resBody := models.UserBody{}
@@ -119,7 +119,7 @@ func (u *usersGroups) AddUserToSite(user *models.User) (*models.User, error) {
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusCreated {
@@ -128,7 +128,7 @@ func (u *usersGroups) AddUserToSite(user *models.User) (*models.User, error) {
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	resBody := models.UserBody{}
@@ -187,7 +187,7 @@ func (u *usersGroups) CreateGroup(group *models.Group) (*models.Group, error) {
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusCreated && res.StatusCode() != http.StatusAccepted {
@@ -196,7 +196,7 @@ func (u *usersGroups) CreateGroup(group *models.Group) (*models.Group, error) {
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	resBody := models.GroupBody{}
@@ -241,7 +241,7 @@ func (u *usersGroups) DeleteGroup(groupID string) error {
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusNoContent {
@@ -250,7 +250,7 @@ func (u *usersGroups) DeleteGroup(groupID string) error {
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	return nil
@@ -293,7 +293,7 @@ func (u *usersGroups) GetGroupsForUser(userID string) ([]models.Group, error) {
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		if res.StatusCode() != http.StatusOK {
@@ -302,7 +302,7 @@ func (u *usersGroups) GetGroupsForUser(userID string) ([]models.Group, error) {
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		resBody := models.QueryGroupBody{}
@@ -358,7 +358,7 @@ func (u *usersGroups) GetUsersInGroup(groupID string) ([]models.User, error) {
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		if res.StatusCode() != http.StatusOK {
@@ -367,7 +367,7 @@ func (u *usersGroups) GetUsersInGroup(groupID string) ([]models.User, error) {
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		resBody := models.QueryUserBody{}
@@ -433,7 +433,7 @@ func (u *usersGroups) GetUsersOnSite(userNames ...string) ([]models.User, error)
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		if res.StatusCode() != http.StatusOK {
@@ -442,7 +442,7 @@ func (u *usersGroups) GetUsersOnSite(userNames ...string) ([]models.User, error)
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		resBody := models.QueryUserBody{}
@@ -508,7 +508,7 @@ func (u *usersGroups) QueryGroups(groupNames ...string) ([]models.Group, error) 
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		if res.StatusCode() != http.StatusOK {
@@ -517,7 +517,7 @@ func (u *usersGroups) QueryGroups(groupNames ...string) ([]models.Group, error) 
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		resBody := models.QueryGroupBody{}
@@ -568,7 +568,7 @@ func (u *usersGroups) QueryUserOnSite(userID string) (*models.User, error) {
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusOK {
@@ -577,7 +577,7 @@ func (u *usersGroups) QueryUserOnSite(userID string) (*models.User, error) {
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	resBody := models.UserBody{}
@@ -631,7 +631,7 @@ func (u *usersGroups) RemoveUserFromSite(userID string, newUserID ...string) err
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusNoContent {
@@ -640,7 +640,7 @@ func (u *usersGroups) RemoveUserFromSite(userID string, newUserID ...string) err
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	return nil
@@ -678,7 +678,7 @@ func (u *usersGroups) RemoveUserFromGroup(userID, groupID string) error {
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusNoContent {
@@ -687,7 +687,7 @@ func (u *usersGroups) RemoveUserFromGroup(userID, groupID string) error {
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	return nil
@@ -742,7 +742,7 @@ func (u *usersGroups) UpdateGroup(group *models.Group) (*models.Group, error) {
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusOK && res.StatusCode() != http.StatusAccepted {
@@ -751,7 +751,7 @@ func (u *usersGroups) UpdateGroup(group *models.Group) (*models.Group, error) {
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	resBody := models.GroupBody{}
@@ -811,7 +811,7 @@ func (u *usersGroups) UpdateUser(user *models.User) (*models.User, error) {
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusCreated {
@@ -820,7 +820,7 @@ func (u *usersGroups) UpdateUser(user *models.User) (*models.User, error) {
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	resBody := models.UserBody{}

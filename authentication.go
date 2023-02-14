@@ -78,7 +78,7 @@ func (a *authentication) SignIn(force ...bool) error {
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusOK {
@@ -87,7 +87,7 @@ func (a *authentication) SignIn(force ...bool) error {
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	resBody := models.SignInBody{}
@@ -135,7 +135,7 @@ func (a *authentication) SignOut() error {
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusNoContent {
@@ -144,7 +144,7 @@ func (a *authentication) SignOut() error {
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	a.signInAt = nil
@@ -203,7 +203,7 @@ func (a *authentication) SwitchSite(contentUrl string) error {
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusOK {
@@ -212,7 +212,7 @@ func (a *authentication) SwitchSite(contentUrl string) error {
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	resBody := models.SignInBody{}
