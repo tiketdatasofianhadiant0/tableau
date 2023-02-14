@@ -61,7 +61,7 @@ func (w *workbooksViews) AddTagsToView(viewID string, tagNames []string) ([]mode
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusOK {
@@ -70,7 +70,7 @@ func (w *workbooksViews) AddTagsToView(viewID string, tagNames []string) ([]mode
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	resBody := models.TagBody{}
@@ -135,7 +135,7 @@ func (w *workbooksViews) AddTagsToWorkbook(workbookID string, tagNames []string)
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusOK {
@@ -144,7 +144,7 @@ func (w *workbooksViews) AddTagsToWorkbook(workbookID string, tagNames []string)
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	resBody := models.TagBody{}
@@ -191,7 +191,7 @@ func (w *workbooksViews) DeleteTagFromView(viewID, tagName string) error {
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusNoContent {
@@ -200,7 +200,7 @@ func (w *workbooksViews) DeleteTagFromView(viewID, tagName string) error {
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	return nil
@@ -238,7 +238,7 @@ func (w *workbooksViews) DeleteTagFromWorkbook(workbookID, tagName string) error
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusNoContent {
@@ -247,7 +247,7 @@ func (w *workbooksViews) DeleteTagFromWorkbook(workbookID, tagName string) error
 			return ErrUnknownError
 		}
 
-		return errCodeMap[errBody.Error.Code]
+		return errBody.Error
 	}
 
 	return nil
@@ -301,7 +301,7 @@ func (w *workbooksViews) DownloadWorkbookPDF(workbookID string, maxAgeInMinutes 
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusOK {
@@ -310,7 +310,7 @@ func (w *workbooksViews) DownloadWorkbookPDF(workbookID string, maxAgeInMinutes 
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	return res.Body(), nil
@@ -348,7 +348,7 @@ func (w *workbooksViews) GetView(viewID string) (*models.View, error) {
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusOK {
@@ -357,7 +357,7 @@ func (w *workbooksViews) GetView(viewID string) (*models.View, error) {
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	resBody := models.ViewBody{}
@@ -405,7 +405,7 @@ func (w *workbooksViews) GetViewByPath(viewName string) ([]models.View, error) {
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		if res.StatusCode() != http.StatusOK {
@@ -414,7 +414,7 @@ func (w *workbooksViews) GetViewByPath(viewName string) ([]models.View, error) {
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		resBody := models.QueryViewBody{}
@@ -473,7 +473,7 @@ func (w *workbooksViews) QueryViewsForSite(f models.Filter) ([]models.View, erro
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		if res.StatusCode() != http.StatusOK {
@@ -482,7 +482,7 @@ func (w *workbooksViews) QueryViewsForSite(f models.Filter) ([]models.View, erro
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		resBody := models.QueryViewBody{}
@@ -538,7 +538,7 @@ func (w *workbooksViews) QueryViewsForWorkbook(workbookID string) ([]models.View
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		if res.StatusCode() != http.StatusOK {
@@ -547,7 +547,7 @@ func (w *workbooksViews) QueryViewsForWorkbook(workbookID string) ([]models.View
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		resBody := models.QueryViewBody{}
@@ -611,7 +611,7 @@ func (w *workbooksViews) QueryViewImage(viewID string, option ...models.QueryVie
 			}
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusOK {
@@ -623,7 +623,7 @@ func (w *workbooksViews) QueryViewImage(viewID string, option ...models.QueryVie
 			}
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	return res.Body(), nil
@@ -674,7 +674,7 @@ func (w *workbooksViews) QueryViewPDF(viewID string, maxAgeInMinutes ...int) ([]
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusOK {
@@ -683,7 +683,7 @@ func (w *workbooksViews) QueryViewPDF(viewID string, maxAgeInMinutes ...int) ([]
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	return res.Body(), nil
@@ -721,7 +721,7 @@ func (w *workbooksViews) QueryWorkbook(workbookID string) (*models.Workbook, err
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	if res.StatusCode() != http.StatusOK {
@@ -730,7 +730,7 @@ func (w *workbooksViews) QueryWorkbook(workbookID string) (*models.Workbook, err
 			return nil, ErrUnknownError
 		}
 
-		return nil, errCodeMap[errBody.Error.Code]
+		return nil, errBody.Error
 	}
 
 	resBody := models.WorkbookBody{}
@@ -782,7 +782,7 @@ func (w *workbooksViews) QueryWorkbooksForSite(f models.Filter) ([]models.Workbo
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		if res.StatusCode() != http.StatusOK {
@@ -791,7 +791,7 @@ func (w *workbooksViews) QueryWorkbooksForSite(f models.Filter) ([]models.Workbo
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		resBody := models.QueryWorkbookBody{}
@@ -850,7 +850,7 @@ func (w *workbooksViews) QueryWorkbooksForUser(ownedByUser ...bool) ([]models.Wo
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		if res.StatusCode() != http.StatusOK {
@@ -859,7 +859,7 @@ func (w *workbooksViews) QueryWorkbooksForUser(ownedByUser ...bool) ([]models.Wo
 				return nil, ErrUnknownError
 			}
 
-			return nil, errCodeMap[errBody.Error.Code]
+			return nil, errBody.Error
 		}
 
 		resBody := models.QueryWorkbookBody{}
