@@ -2,9 +2,11 @@ package tableau
 
 import (
 	"fmt"
-	"github.com/tiketdatarisal/tableau/models"
 	"net/http"
 	. "net/url"
+	"time"
+
+	"github.com/tiketdatarisal/tableau/models"
 )
 
 type workbooksViews struct {
@@ -594,8 +596,8 @@ func (w *workbooksViews) QueryViewImage(viewID string, option ...models.QueryVie
 	}
 
 	url = fmt.Sprintf(queryViewImageParams, url, opt.Encode())
-	fmt.Println(url)
-	res, err := w.base.c.R().
+	res, err := w.base.c.
+		SetTimeout(5*time.Minute).R().
 		SetHeader(contentTypeHeader, mimeTypeJSON).
 		SetHeader(acceptHeader, mimeTypeAny).
 		SetHeader(authorizationHeader, w.base.Authentication.getBearerToken()).
